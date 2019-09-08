@@ -1,0 +1,211 @@
+---
+title: "Reprint Authors per Country"
+output: github_document
+bibliography: pubs.bib
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = TRUE
+)
+```
+
+```{r setup, echo = FALSE}
+require(tidyverse)
+require(RJDBC)
+require(rJava)
+.jinit()
+jdbcDriver <-
+  JDBC(driverClass = "oracle.jdbc.OracleDriver", classPath = "~/ojdbc8.jar")
+jdbcConnection <-
+  dbConnect(
+    jdbcDriver,
+    "jdbc:oracle:thin:@//biblio-p-db01:1521/bibliodb01.fiz.karlsruhe",
+    Sys.getenv("kb_user"),
+    Sys.getenv("kb_pwd")
+  ) 
+```
+
+## Motivation
+
+Country information about corresponding authors play a crucial role in open access funding [@Schimmer_2015]. The Web of Science contains data about this author role including affiliations, making it a valuable source to determine the productivity of corresponding authors per country ad journal. 
+
+The aim of this work is to better understand how countries of affiliation from corresponding authors are represented in the WoS-KB, and how they can be retrieved from it. Such an analysis will yield valuable insights about how to calculate the number of scholarly articles per country and journal from the WoS-KB database using the corresponding author addresses only.
+
+## Potential issues
+
+1. A corresponding author lists at least two different countries
+2. More than one corresponding author is listed
+3. Corresponding authors work in different countries
+
+## Example 1
+
+A corresponding author lists at least two different countries, e.g., `UT=000400754000138`
+
+
+```{sql connection=jdbcConnection}
+select  distinct wos_b_2019.institutions.countrycode,
+        wos_b_2019.items_authors_institutions.type,
+        wos_b_2019.items_authors_institutions.fk_authors,
+        wos_b_2019.items.ut_eid,
+        wos_b_2019.items.pubyear
+from wos_b_2019.items
+inner join
+        wos_b_2019.items_authors_institutions                                 
+            on wos_b_2019.items_authors_institutions.fk_items = wos_b_2019.items.pk_items       
+inner join
+        wos_b_2019.institutions                          
+            on wos_b_2019.institutions.pk_institutions = wos_b_2019.items_authors_institutions.fk_institutions  
+where wos_b_2019.items.ut_eid = '000400754000138'
+order by wos_b_2019.items_authors_institutions.fk_authors
+```
+
+Potential issues: Only one affiliation is tagged as `RP` in `wos_b_2019.items_author_institutions`.
+
+## Example 2
+
+More than one corresponding author is listed. For `UT_EID=000372645900002`, the Web of Science lists seven corresponding authors and four reprint adresses.
+
+```{sql connection=jdbcConnection, max.print = NA}
+select  distinct wos_b_2019.institutions.countrycode,
+        wos_b_2019.items_authors_institutions.type,
+        wos_b_2019.items_authors_institutions.fk_authors,
+        wos_b_2019.items.ut_eid,
+        wos_b_2019.items.pubyear
+from wos_b_2019.items
+inner join
+        wos_b_2019.items_authors_institutions                                 
+            on wos_b_2019.items_authors_institutions.fk_items = wos_b_2019.items.pk_items       
+inner join
+        wos_b_2019.institutions                          
+            on wos_b_2019.institutions.pk_institutions = wos_b_2019.items_authors_institutions.fk_institutions  
+where wos_b_2019.items.ut_eid = '000372645900002'
+order by wos_b_2019.items_authors_institutions.fk_authors
+```
+
+Potential issue: As in Example 1, Only one affiliation is tagged as `RP` in `wos_b_2019.items_author_institutions`.
+
+## Example 3
+
+Corresponding authors work in different countries. For `UT_EID=000372645900002`, the Web of Science lists two corresponding authors, one affilated with a Spanish, the other with a Portuguese institution.
+
+```{sql connection=jdbcConnection}
+select  distinct wos_b_2019.institutions.countrycode,
+        wos_b_2019.items_authors_institutions.type,
+        wos_b_2019.items_authors_institutions.fk_authors,
+        wos_b_2019.items.ut_eid,
+        wos_b_2019.items.pubyear
+from wos_b_2019.items
+inner join
+        wos_b_2019.items_authors_institutions                                 
+            on wos_b_2019.items_authors_institutions.fk_items = wos_b_2019.items.pk_items       
+inner join
+        wos_b_2019.institutions                          
+            on wos_b_2019.institutions.pk_institutions = wos_b_2019.items_authors_institutions.fk_institutions  
+where wos_b_2019.items.ut_eid = '000389110200022'
+order by wos_b_2019.items_authors_institutions.fk_authors
+```
+
+
+Potential issues: As in Example 1 and 2, only one affiliation is tagged with RP in `wos_b_2019.items_author_institutions`. Moreover, checking the WoS raw data reveals that the RP-author `14734495` is not affiliated with an Portuguese institution at all.
+
+## SQL strategy to circumvent these issues
+
+### Steps 
+
+1. Get all `FK_AUTHORS` tagged as `RP`, and store the result `rp_author_table`
+2. From authors listed in `rp_author_table` obtain all countries of affilation and store them in `rp_countries_table`
+3. Aggregate `rp_countries_table`
+
+#### 1. Get all `FK_AUTHORS` tagged as `RP`, and store the result `rp_author_table`
+
+
+```{sql connection=jdbcConnection, output.var="rp_authors"}
+select
+        distinct wos_b_2019.items_authors_institutions.fk_items,
+        wos_b_2019.items_authors_institutions.fk_authors      
+    from
+        wos_b_2019.items      
+    inner join
+        wos_b_2019.databasecollection              
+            on wos_b_2019.databasecollection.fk_items =  wos_b_2019.items.pk_items        
+    inner join
+        wos_b_2019.items_authors_institutions                                   
+            on wos_b_2019.items_authors_institutions.fk_items = wos_b_2019.items.pk_items       
+    inner join
+        wos_b_2019.institutions                          
+            on wos_b_2019.institutions.pk_institutions = wos_b_2019.items_authors_institutions.fk_institutions      
+    where
+        wos_b_2019.databasecollection.edition_value in ('WOS.SCI', 'WOS.SSCI', 'WOS.AHCI')                  
+        and wos_b_2019.items.doctype in ('Article', 'Review')                   
+        and wos_b_2019.items.pubyear in (2014, 2015, 2016, 2017)         
+        and wos_b_2019.items.ut_eid in ('000389110200022', '000372645900002', '000400754000138') 
+        and wos_b_2019.items_authors_institutions.type = 'RP'
+```
+
+Store in personal table space
+
+```{r}
+dbWriteTable(conn = jdbcConnection, 
+             name = "rp_author_table", 
+             value = rp_authors)
+```
+
+#### From authors listed in `rp_author_table` obtain all countries of affilation and store them in `rp_countries_table`
+
+```{sql connection=jdbcConnection, output.var="rp_countries"}
+select
+        countrycode,
+        wos_b_2019.items_authors_institutions.type,
+        wos_b_2019.items_authors_institutions.fk_institutions,
+        wos_b_2019.items_authors_institutions.fk_authors,
+        wos_b_2019.issues.issn,
+        ut_eid,
+        wos_b_2019.items.pubyear
+    from
+        wos_b_2019.items      
+    inner join
+        wos_b_2019.issues                           
+            on wos_b_2019.issues.pk_issues = wos_b_2019.items.fk_issues         
+    inner join
+        wos_b_2019.items_authors_institutions                                        
+            on wos_b_2019.items_authors_institutions.fk_items = wos_b_2019.items.pk_items       
+    inner join
+        wos_b_2019.institutions                          
+            on wos_b_2019.institutions.pk_institutions = wos_b_2019.items_authors_institutions.fk_institutions      
+    inner join
+        rp_author_table                          
+            on (
+                rp_author_table.fk_items = wos_b_2019.items_authors_institutions.fk_items                  
+                and rp_author_table.fk_authors = wos_b_2019.items_authors_institutions.fk_authors             
+            )
+```
+
+Store in personal table space
+
+```{r}
+dbWriteTable(conn = jdbcConnection, 
+             name = "rp_countries_table", 
+             value = rp_countries)
+```
+
+#### Aggregate `rp_countries_table`
+
+Counting method: country of affilation is only counted once per article.
+
+```{sql connection=jdbcConnection}
+select
+    countrycode,
+    issn,
+    count(distinct(ut_eid)) as publications 
+from
+    rp_countries_table 
+group by
+    countrycode,
+    issn
+order by issn
+```

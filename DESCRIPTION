@@ -1,0 +1,28 @@
+Type: Compendium
+Package: oa2020cadata
+Title: Global Publishing Output from Corresponding Authors 2014 - 2018
+Version: 0.0.1
+Authors@R: 
+    person(given = "Najko",
+           family = "Jahn",
+           role = c("aut", "cre"),
+           email = "najko.jahn@googlemail.com",
+           comment = c(ORCID = "0000-0001-5105-1463"))
+Description: This compendium provides the data and source code
+    used to obtain a dataset covering the global publishing output from
+    corresponding authors 2014 - 2018 per country of affiliation, journal
+    and publisher. The data was retrieved from the Web of Science in-house
+    database from the German Competence Centre for Bibliometrics and
+    enriched with Crossref metadata and the ISSN-GOLD-OA matching list.
+License: What license it uses
+Depends: 
+    knitr,
+    readr,
+    rJava,
+    RJDBC,
+    rmarkdown,
+    scales,
+    tidyverse,
+    writexl
+Encoding: UTF-8
+LazyData: true
