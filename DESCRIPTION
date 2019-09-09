@@ -25,5 +25,7 @@ Depends:
     tidyverse,
     writexl,
     countrycodes
+Suggests:
+    rcrossref
 Encoding: UTF-8
 LazyData: true
