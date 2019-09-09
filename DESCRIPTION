@@ -24,7 +24,8 @@ Depends:
     scales,
     tidyverse,
     writexl,
-    countrycode
+    countrycode,
+    scatterpie
 Suggests:
     rcrossref
 Encoding: UTF-8
