@@ -20,7 +20,7 @@ require(RJDBC)
 require(rJava)
 .jinit()
 jdbcDriver <-
-  JDBC(driverClass = "oracle.jdbc.OracleDriver", classPath = "~/ojdbc8.jar")
+  JDBC(driverClass = "oracle.jdbc.OracleDriver", classPath = "../inst/jdbc_driver/ojdbc8.jar")
 jdbcConnection <-
   dbConnect(
     jdbcDriver,

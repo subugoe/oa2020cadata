@@ -1,7 +1,5 @@
 ---
 title: "Publisher League Global"
-author: "Najko Jahn"
-date: "9/5/2019"
 output: github_document
 ---
 
@@ -21,7 +19,7 @@ require(tidyverse)
 require(RJDBC)
 require(rJava)
 require(writexl)
-rmarkdown::render("kb_fetch_publisher_global.Rmd")
+rmarkdown::render("004_kb_fetch_publisher_global.Rmd")
 ```
 
 ## Workflow
@@ -39,7 +37,7 @@ require(RJDBC)
 require(rJava)
 .jinit()
 jdbcDriver <-
-  JDBC(driverClass = "oracle.jdbc.OracleDriver", classPath = "~/ojdbc8.jar") # you may need to change the path to your db driver
+  JDBC(driverClass = "oracle.jdbc.OracleDriver", classPath = "../inst/jdbc_driver/ojdbc8.jar") # you may need to change the path to your db driver
 jdbcConnection <-
   dbConnect(
     jdbcDriver,
@@ -84,7 +82,7 @@ select
 head(rp_publisher) %>%
   knitr::kable()
 # dump
-write_csv(rp_publisher, "data/publisher_league_14_18.csv")
+write_csv(rp_publisher, "../data/publisher_league_14_18.csv")
 ```
 
 ### Get most frequent publisher and journal names from Crossref
@@ -95,11 +93,11 @@ As a result, a [matching table between Crossref and the Web of Science journals]
 
 
 ```{r}
-cr_journals <- readr::read_csv("data/cr_wos.csv") %>%
+cr_journals <- readr::read_csv("../data/cr_wos.csv") %>%
   # merge springer nature brands
   mutate(publisher = ifelse(grepl("Springer", publisher, fixed = FALSE), "Springer Nature", publisher))
-rp_publisher <- readr::read_csv("data/publisher_league_14_18.csv")
-issn_l <- readr::read_tsv("data/20190818.ISSN-to-ISSN-L.txt") %>%
+rp_publisher <- readr::read_csv("../data/publisher_league_14_18.csv")
+issn_l <- readr::read_tsv("../data/20190818.ISSN-to-ISSN-L.txt") %>%
   # manual fix Journal - American Water Works 
   add_row(ISSN = "2164-4535", `ISSN-L` = "0003-150X")
 rp_df <- rp_publisher %>%
@@ -171,14 +169,14 @@ rp_df_oa %>%
     journal_title, publisher, oa_journal,
     issn_l = `ISSN-L`
     ) %>%
-  write_csv("data/publisher_14_18.csv")
+  write_csv("../data/publisher_14_18.csv")
 ```
 
 Dump to Excel
 
 ```{r}
-readr::read_csv("data/publisher_14_18.csv") %>%
-  writexl::write_xlsx("data/publisher_14_18.xlsx")
+readr::read_csv("../data/publisher_14_18.csv") %>%
+  writexl::write_xlsx("../data/publisher_14_18.xlsx")
 ```
 
 Data Schema:

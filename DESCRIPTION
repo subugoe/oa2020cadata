@@ -23,6 +23,7 @@ Depends:
     rmarkdown,
     scales,
     tidyverse,
-    writexl
+    writexl,
+    countrycodes
 Encoding: UTF-8
 LazyData: true
