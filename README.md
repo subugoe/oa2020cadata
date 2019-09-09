@@ -9,13 +9,13 @@
 
 ### Overview
 
-This repository is a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) providing a dataset that covers corresponding author country affiliations indexed in the Web of Science 2014 - 2018. The compendium contains data, code, and text associated with it. The R Markdown files in the [`analysis/`](analysis/) directory contain details about the data analysis, particularly about how the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) was interfaced, as well as the [data descriptive](analysis/paper.md). The [`data/`](data/) directory contains all aggregated data. Because of the proprietary nature of the Web of Science, no raw data including access to the database can be shared. 
+This repository is a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) providing a dataset about corresponding author country affiliations indexed in the Web of Science 2014 - 2018. The compendium contains data, code, and text associated with it. The R Markdown files in the [`analysis/`](analysis/) directory provide details about the data analysis, particularly about how the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) was interfaced, as well as the [data descriptive](analysis/paper.md). The [`data/`](data/) directory contains all aggregated data. Because of the proprietary nature of the Web of Science, no raw data including access to the database can be shared. 
 
 ### Analysis files
 
 The [`analysis/`](analysis/) directory contains the following reports written in [R Markdown](https://rmarkdown.rstudio.com/):
 
-- [`paper.Rmd`](analysis/paper.Rmd) - The Data Descriptive including two use-cases. Link to [rendered report](analysis/paper.Rmd)
+- [`paper.Rmd`](analysis/paper.Rmd) - The Data Descriptive including two use-cases. Link to [rendered report](analysis/paper.md)
 
 Analytical steps for obtaining the data from the Web of Science in-house database maintained by the German Competence Center for Bibliometrics (WoS-KB), and data enriching were also provided as R Markdown reports:
 
@@ -36,6 +36,23 @@ The [`data/`](data/) directory contains the resulting datasets stored as comma-s
 - [`geocodes.csv`](data/geocodes.csv) - Country geocodes obtained from <https://developers.google.com/public-data/docs/canonical/countries_csv>
 
 ### Reproducibility notes
+
+### License
+
+The compiled datasets are released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or distribute these materials in any form, for any purpose, commercial or non-commercial, and by any means.
+
+Re-used data terms:
+
+Crossref asserts no claims of ownership to individual items of bibliographic metadata and associated Digital Object Identifiers (DOIs) acquired through the use of the Crossref Free Services. Individual items of bibliographic metadata and associated DOIs may be cached and incorporated into the user's content and systems.
+
+ISSN-Matching of Gold OA Journals (ISSN-GOLD-OA) 3.0 and Country Geocodes obtained from Google are made available under CC-BY.
+
+Web of Science data © 2019 Clarivate Analytics. All rights reserved.
+
+
+### Contributing
 
 ### Acknowledgment
 
