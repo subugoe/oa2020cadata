@@ -163,7 +163,6 @@ Data Schema
 | `publisher`        | Most frequently used publisher name in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref | Crossref                                                                                       |
 | `oa_journal`       | Is the journal publishing all articles open access without delay (full open access)?                                                        | Bielefeld GOLD OA List V3                                                                      |
 | `issn_l`           | Linking ISSN, a journal id that groups the different media of the same serial publication, e.g. ISSN for print with electronic issn.        | CIEPS                                                                                          |
-|                    |
 
 ### Corresponding author data
 
@@ -274,7 +273,7 @@ therefore upper estimates.
 Last, but not least, further qualitative evaluation of the dataset is
 still needed. Code and data are shared as research compendium to ensure
 the technical reproducibility of all steps involved in our data
-analytical work including this data descripitive.
+analytical work including this data descriptive.
 
 ## Acknowledgment
 

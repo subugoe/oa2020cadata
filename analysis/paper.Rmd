@@ -92,7 +92,6 @@ Data Schema `publisher_14_18`:
 | `publisher`        | Most frequently used publisher name in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref | Crossref                                                                                       |
 | `oa_journal`       | Is the journal publishing all articles open access without delay (full open access)?                                                        | Bielefeld GOLD OA List V3                                                                      |
 | `issn_l`           | Linking ISSN, a journal id that groups the different media of the same serial publication, e.g. ISSN for print with electronic issn.        | CIEPS                                                                                          |
-                                                                                             |
 
 ### Corresponding author data
 
@@ -368,7 +367,7 @@ Moreover, as any other bibliometric databases, the data structure can be subject
 
 The Bielefeld GOLD OA list was used to determine fully open access journals. However, it does not contain the date when a subscription-based journal became fully open access. The figures should be therefore interpreted numbers of articles available in current fully open access journals, instead of published in an fully open access journal at the time of publication. Open access article counts are therefore upper estimates.
 
-Last, but not least, further qualitative evaluation of the dataset is still needed. Code and data are shared as research compendium to ensure the technical reproducibility of all steps involved in our data analytical work including this data descripitive.  
+Last, but not least, further qualitative evaluation of the dataset is still needed. Code and data are shared as research compendium to ensure the technical reproducibility of all steps involved in our data analytical work including this data descriptive.  
 
 ## Acknowledgment
 
