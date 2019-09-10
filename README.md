@@ -9,7 +9,7 @@
 
 ### Overview
 
-This repository is a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) providing a dataset about corresponding author country affiliations indexed in the Web of Science 2014 - 2018. The compendium contains data, code, and text associated with it. The R Markdown files in the [`analysis/`](analysis/) directory provide details about the data analysis, particularly about how the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) was interfaced, as well as the [data descriptive](analysis/paper.md). The [`data/`](data/) directory contains all aggregated data. Because of the proprietary nature of the Web of Science, no raw data including access to the database can be shared. 
+This repository is a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) providing a dataset about corresponding author country affiliations indexed in the Web of Science 2014 - 2018. The compendium contains data, code, and text associated with it. The R Markdown files in the [`analysis/`](analysis/) directory provide details about the data analysis, particularly about how the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) was interfaced, as well as the [data descriptive](analysis/paper.md). The [`data/`](data/) directory contains all aggregated data. Because of the proprietary nature of the Web of Science, no raw data and no access to the in-house database can be shared. 
 
 ### Analysis files
 
@@ -19,7 +19,7 @@ The [`analysis/`](analysis/) directory contains the following reports written in
 
 Analytical steps for obtaining the data from the Web of Science in-house database maintained by the German Competence Center for Bibliometrics (WoS-KB), and data enriching were also provided as R Markdown reports:
 
-- [`001_kb_rp_pretest.Rmd`](analysis/001_kb_rp_pretest.Rmd) - Initial exploration about how corresponding authorships are represented in the Wos_KB. Link to [rendered report](analysis/001_kb_rp_pretest.md)
+- [`001_kb_rp_pretest.Rmd`](analysis/001_kb_rp_pretest.Rmd) - Initial exploration about how corresponding authorships are represented in the WoS-KB. Link to [rendered report](analysis/001_kb_rp_pretest.md)
 - [`002_kb_rp_coverage.Rmd`](analysis/002_kb_rp_coverage.Rmd) - Coverage analysis of reprint authors in the WoS-KB for the period 2014 - 2018. Link to [rendered report](analysis/002_kb_rp_coverage.md)
 - [`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd) - Obtain and compile the dataset about corresponding author country affiliations 2014 - 2018. Link to [rendered report](analysis/003_kb_fetch_ca.md)
 - [`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd) - Obtain and compile the dataset about the global publisher output 2014 - 2018. Link to [rendered report](analysis/004_kb_fetch_publisher.md)
@@ -37,9 +37,11 @@ The [`data/`](data/) directory contains the resulting datasets stored as comma-s
 
 ### Reproducibility notes
 
-This repository follow the structure of a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) that uses R package structure to port data and code. 
+This repository follows the concept of a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) that uses the R package structure to port data and code. 
 
-#### Local use
+Because access to the data infrastructure of the German Competence Center for Bibliometrics (Wos-KB) is restricted, there are different levels of reproducibilty. Everyone will be able to reproduce the anaylsis in the [data descriptive](analysis/paper.md), the main document of this research compendium written in R Markdown. Users with access to the WoS-KB data infrastructure will also be able to replicate the R code and SQL queries locally, or on the script server.
+
+#### Data Descriptive
 
 Clone the GitHub repository with all data and code.
 
@@ -50,24 +52,43 @@ git clone https://github.com/subugoe/oa2020cadata.git
 Open an R session in the directory of this package and install the R package dependencies using a package snapshot from the date this package was build
 
 ```r
-devtools::install_deps(devtools::install_deps(repos = list(CRAN = 'http://mran.revolutionanalytics.com/snapshot/2019-09-08/')))
+devtools::install_deps(repos = list(CRAN = 'http://mran.revolutionanalytics.com/snapshot/2019-09-08/'))
 ```
 
-If you have access to the Competence Center of Bibliometrics data infrastructure, add your login credentials to your `.Renviron` file and save it.
+To replicate the data descriptive:
 
 ```r
+rmarkdown::render("paper.Rmd")
+```
+
+#### Binder 
+
+Using the [holepunch-package](https://github.com/karthik/holepunch) the project was made Binder ready. Binder allows you to execute the data descriptive in the cloud in your webbrowser.
+
+[![Launch Rstudio Binder](http://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/subugoe/oa2020cadata/master?urlpath=rstudio)
+
+#### User with access to the  German Competence Center for Bibliometrics data infrastructure
+
+If you have access to the Competence Center of Bibliometrics data infrastructure, you can also replicate how data was obtained from the Web of Science. These steps are described in the R Markdown documents, starting with `00` in the [`analysis/`](analysis/) folder.
+
+To get started, follow the steps described above to download the research compendium including the necessary R packages. Next, add your database login credentials to your `.Renviron` file and save it. 
+
+```
 kb_user="najko"
 kb_pwd="12345"
 ```
 
+You can open your `.Renviron` file from R with `usethis::edit_r_environ()`. Reload your R session.
+
 The Oracle database driver needed to access the remote database is included in this repository.
 
-Documents are written in R Markdown and can be re-compiled with the `rmarkdown::render()`function.
+To replicate the R Markdown documents, call `rmarkdown::render()`. 
 
-#### Binder 
-
+When working on the script-server, please note that you need to render the documents with `knitr::knit()`, because pandoc is not available.   
 
 #### Limitations
+
+Using a docker container with all source code and data needed to reproduce this research compendium would reduce the above-described set-up efforts. Unfortunately, access to the German Competence Center for Bibliometrics requires a VPN tunnel that, at least in my local setup, is not accessible from the Docker container. Furthermore, Docker is not available for users on the script-server. 
 
 ### License
 
@@ -83,8 +104,21 @@ ISSN-Matching of Gold OA Journals (ISSN-GOLD-OA) 3.0 and Country Geocodes obtain
 
 Web of Science data © 2019 Clarivate Analytics. All rights reserved.
 
+The documentation and data descriptive including the figures are made available under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+Source Code: MIT (Najko Jahn, 2019)
+
+### Contributors
 
 ### Contributing
+
+This data anyltics works has been developed using open tools. There are a number of ways you can help make it better:
+
+If you don’t understand something, please let me know and submit an issue.
+
+Feel free to add new features or fix bugs by sending a pull request.
+
+Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms.
 
 ### Acknowledgment
 

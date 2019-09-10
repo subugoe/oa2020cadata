@@ -14,7 +14,7 @@ Description: This compendium provides the data and source code
     and publisher. The data was retrieved from the Web of Science in-house
     database from the German Competence Centre for Bibliometrics and
     enriched with Crossref metadata and the ISSN-GOLD-OA matching list.
-License: What license it uses
+License: MIT + file LICENSE
 Depends: R (>= 3.6.0)
 Imports:
     knitr,
