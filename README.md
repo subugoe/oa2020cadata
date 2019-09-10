@@ -15,14 +15,14 @@ This repository is a [research compendium](https://doi.org/10.7287/peerj.preprin
 
 The [`analysis/`](analysis/) directory contains the following reports written in [R Markdown](https://rmarkdown.rstudio.com/):
 
-- [`paper.Rmd`](analysis/paper.Rmd) - The Data Descriptive including two use-cases. Link to [rendered report](analysis/paper.md)
+- [`paper.Rmd`](analysis/paper.Rmd) - The Data Descriptive including two use-cases. Link to the [rendered report](analysis/paper.md)
 
 Analytical steps for obtaining the data from the Web of Science in-house database maintained by the German Competence Center for Bibliometrics (WoS-KB), and data enriching were also provided as R Markdown reports:
 
-- [`001_kb_rp_pretest.Rmd`](analysis/001_kb_rp_pretest.Rmd) - Initial exploration about how corresponding authorships are represented in the WoS-KB. Link to [rendered report](analysis/001_kb_rp_pretest.md)
-- [`002_kb_rp_coverage.Rmd`](analysis/002_kb_rp_coverage.Rmd) - Coverage analysis of reprint authors in the WoS-KB for the period 2014 - 2018. Link to [rendered report](analysis/002_kb_rp_coverage.md)
-- [`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd) - Obtain and compile the dataset about corresponding author country affiliations 2014 - 2018. Link to [rendered report](analysis/003_kb_fetch_ca.md)
-- [`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd) - Obtain and compile the dataset about the global publisher output 2014 - 2018. Link to [rendered report](analysis/004_kb_fetch_publisher.md)
+- [`001_kb_rp_pretest.Rmd`](analysis/001_kb_rp_pretest.Rmd) - Initial exploration about how corresponding authorships are represented in the WoS-KB. Link to the [rendered report](analysis/001_kb_rp_pretest.md)
+- [`002_kb_rp_coverage.Rmd`](analysis/002_kb_rp_coverage.Rmd) - Coverage analysis of reprint authors in the WoS-KB for the period 2014 - 2018. Link to the [rendered report](analysis/002_kb_rp_coverage.md)
+- [`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd) - Obtain and compile the dataset about corresponding author country affiliations 2014 - 2018. Link to the [rendered report](analysis/003_kb_fetch_ca.md)
+- [`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd) - Obtain and compile the dataset about the global publisher output 2014 - 2018. Link to the [rendered report](analysis/004_kb_fetch_publisher.md)
 
 ### Data files
 
