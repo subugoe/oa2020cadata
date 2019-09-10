@@ -37,6 +37,38 @@ The [`data/`](data/) directory contains the resulting datasets stored as comma-s
 
 ### Reproducibility notes
 
+This repository follow the structure of a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) that uses R package structure to port data and code. 
+
+#### Local use
+
+Clone the GitHub repository with all data and code.
+
+```
+git clone https://github.com/subugoe/oa2020cadata.git
+```
+
+Open an R session in the directory of this package and install the R package dependencies using a package snapshot from the date this package was build
+
+```r
+devtools::install_deps(devtools::install_deps(repos = list(CRAN = 'http://mran.revolutionanalytics.com/snapshot/2019-09-08/')))
+```
+
+If you have access to the Competence Center of Bibliometrics data infrastructure, add your login credentials to your `.Renviron` file and save it.
+
+```r
+kb_user="najko"
+kb_pwd="12345"
+```
+
+The Oracle database driver needed to access the remote database is included in this repository.
+
+Documents are written in R Markdown and can be re-compiled with the `rmarkdown::render()`function.
+
+#### Binder 
+
+
+#### Limitations
+
 ### License
 
 The compiled datasets are released into the public domain.
