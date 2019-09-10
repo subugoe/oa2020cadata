@@ -58,7 +58,7 @@ devtools::install_deps(repos = list(CRAN = 'http://mran.revolutionanalytics.com/
 To replicate the data descriptive:
 
 ```r
-rmarkdown::render("paper.Rmd")
+rmarkdown::render("anaylsis/paper.Rmd")
 ```
 
 #### Binder 
