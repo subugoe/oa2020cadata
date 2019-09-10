@@ -39,7 +39,7 @@ The [`data/`](data/) directory contains the resulting datasets stored as comma-s
 
 This repository follows the concept of a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) that uses the R package structure to port data and code. 
 
-Because access to the data infrastructure of the German Competence Center for Bibliometrics (Wos-KB) is restricted, there are different levels of reproducibilty. Everyone will be able to reproduce the anaylsis in the [data descriptive](analysis/paper.md), the main document of this research compendium written in R Markdown. Users with access to the WoS-KB data infrastructure will also be able to replicate the R code and SQL queries locally, or on the script server.
+Because access to the data infrastructure of the German Competence Center for Bibliometrics (WoS-KB) is restricted, there are different levels of reproducibilty. Everyone will be able to reproduce the anaylsis in the [data descriptive](analysis/paper.md), the main document of this research compendium written in R Markdown. Users with access to the WoS-KB data infrastructure will also be able to replicate the R code and SQL queries locally, or on the script server.
 
 #### Data Descriptive
 
