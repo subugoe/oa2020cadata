@@ -171,7 +171,8 @@ p_bar <- ggplot(plot_df, aes(x="", y = prop, fill = publisher_group)) +
   scale_y_continuous(breaks = seq(0,1, by =0.1), labels = scales::percent_format(accuracy = 5L)) +
   labs(title = "Global Publisher Market Shares 2014 - 2018", x = "", y = "",
        subtitle = "Original Articles and Reviews indexed in the Web of Science\n\n",
-       caption = "\nData Source:  Web of Science / Competence Centre for Bibliometrics for German Science.\nPublisher names were disambiguated using Crossref metadata. OA journals identified using the Bielefeld Gold OA list.\nFunding: Federal Ministry of Education and Research of Germany (BMBF)") +
+       caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science.\nPublisher names were disambiguated using Crossref metadata. OA status obtained from the Bielefeld GOLD OA list.\n
+    Funding: Federal Ministry of Education and Research of Germany (BMBF), Project OAUNI (01PU17023A)") +
   #  scale_y_continuous(breaks = seq(0,1, by =0.1), labels = scales::percent_format(accuracy = 5L)) +
   theme_minimal(base_family = "Roboto", base_size = 16) +
   theme(plot.margin = margin(30, 30, 30, 30)) +
@@ -192,7 +193,7 @@ ggsave(
 
 ![Figure 3](figure/global_publisher_share.png)
 
-Our data confirms that the global publishing landscape is dominated by a few large publishers. In total, ten publishers accounted foralmost two-thirds of articles published between 2014 - 2018. The Big 3, Elsevier, Springer Nature and Wiley, even accounted for a percentage of 46 %. However, further analysis suggests large differences when differentiating between toll and fully open access: The market for fully open access journals is so far less domintated by major publishing houses. A notable exeption is Springer Nature with its large fully open access portfolio including BioMed Central and the large mega-journals Scientific Reports and Nature Communications.
+Our data confirms that the global publishing landscape is dominated by a few large publishers. In total, ten publishers accounted for around two-thirds of articles published between 2014 - 2018. The Big 3, Elsevier, Springer Nature and Wiley, accounted for a percentage of 46 %. However, further analysis suggests large differences when differentiating between toll and fully open access: The market for fully open access journals seems to be far less dominated by major publishing houses. A notable exception is Springer Nature with its large fully open access portfolio including BioMed Central and the large mega-journals Scientific Reports and Nature Communications.
 
 ### Global Map of Toll-Access Journal Publishing 
 
@@ -332,7 +333,7 @@ p <- ggplot(world, aes(long, lat)) +
     title = "Who did publish in toll-access journals between 2014 - 2018?",
     x = "",
     y = "",
-    caption = "Data Sources:  Web of Science in-house database from the Competence Centre for Bibliometrics for German Science.\nPublisher names were disambiguated using Crossref metadata.Closed Access Journals identified using the Bielefeld GOLD OA list.\n
+    caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science.\nPublisher names were disambiguated using Crossref metadata. OA status obtained from the Bielefeld GOLD OA list.\n
     Funding: Federal Ministry of Education and Research of Germany (BMBF), Project OAUNI (01PU17023A)",
     subtitle = "Circle size represents the number of corresponding authorships of original articles and reviews per country"
   ) +
@@ -359,13 +360,80 @@ ggsave(
 
 ![Figure 4](figure/map.png)
 
+The following figure shows the country share per publisher in terms of original articles and reviews published in toll-access journals using corresponding author affiliations. The flipped x-axis shows the top 10 countries of affiliations in terms of articles published, while the y-axis depicts the percentage per publisher. The figure indicates, which countries were of particularly importance to a publisher. Furthermore, it suggests large variations across publishers. Take for instance the publisher Royal Society of Chemistry. Around every third article published in a toll-access journal was submitted from an author based in China, while the overall share of China-based authors was `r rp_df %>% filter(oa_journal == FALSE) %>% group_by(country_code) %>% summarise(n = sum(articles)) %>% arrange(desc(n)) %>% mutate(prop = n /sum(n)) %>% filter(country_code == "CHN") %>% .$prop * 100` %.
+
+```{r}
+top_10_publisher <- rp_df %>% 
+  filter(oa_journal == FALSE) %>%
+  group_by(publisher) %>%
+  summarise(n = sum(articles)) %>%
+  arrange(desc(n)) %>%
+  head(11) %>%
+  .$publisher 
+top_10_countries <- rp_df %>%
+  filter(oa_journal == FALSE) %>%
+  group_by(country_code) %>%
+  summarise(n = sum(articles)) %>%
+  arrange(desc(n)) %>%
+  head(10) %>%
+  .$country_code
+plot_df <- rp_df %>%
+   filter(oa_journal == FALSE) %>%
+  mutate(fct_publisher = ifelse(publisher %in% top_10_publisher, publisher, "Others")) %>%
+  mutate(fct_publisher = ifelse(is.na(fct_publisher), "Others", fct_publisher)) %>%
+  mutate(fct_countrcode = ifelse(country_code %in% top_10_countries, country_code, "Others")) %>%
+  mutate(fct_countrcode = factor(fct_countrcode, levels = c(top_10_countries, "Others"))) %>%
+  group_by(fct_publisher, fct_countrcode) %>%
+  summarize(n = sum(articles)) %>%
+  mutate(prop = n / sum(n)) %>%
+  ungroup() 
+#' plot
+ggplot(plot_df, aes(forcats::fct_rev(fct_countrcode), prop, fill = prop)) +
+  coord_flip() +
+  geom_bar(stat = "identity") +
+  facet_wrap( ~ fct_relevel(fct_publisher, top_10_publisher), ncol = 3) +
+  scale_fill_viridis_c(
+    "Country share per publisher (in %)",
+    labels = scales::percent_format(accuracy = 5L),
+    option = "C"
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 5L))  +
+  labs(
+    title = "Who did publish in toll-access journals from major publishers between 2014 - 2018?",
+    x = "Country of Affiliation (Top 10)",
+    y = "Share of Original Articles and Reviews per Publisher",
+    caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science.\nPublisher names were disambiguated using Crossref metadata. OA status obtained from the Bielefeld GOLD OA list.\n
+    Funding: Federal Ministry of Education and Research of Germany (BMBF), Project OAUNI (01PU17023A)",
+    subtitle = "Corresponding authors' countries of affiliation per publisher."
+  ) +
+  theme_minimal(base_family = "Roboto", base_size = 16) +
+  theme(plot.margin = margin(30, 10, 30, 10)) +
+  theme(panel.grid.minor.y = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(panel.grid.major.y = element_blank()) +
+  theme(panel.border = element_blank()) +
+  theme(legend.position = "top",
+        legend.justification = "right",
+        legend.text=element_text(size =  9)) -> p
+#' save as png
+ggsave(
+  "figure/publisher_share.png",
+  p,
+  dpi = 450,
+  height = 12,
+  width = 16
+)
+```
+
+![](figure/publisher_share.png)
+
 ## Responsible use and limitations
 
-Although the Web of Science database is a well-established bibliometric database in the quantitative science studies it comes with certain limitations that need careful consideration when interpreting our data. First, the Web of Science is selective in terms of journal inclusion, likely not covering the whole journal portfolio of the investigated publishers. Although publisher names were disambiguated, journal title transfers between publishers were not tracked. Furthermore, the year of inclusion in a journal issue, i.e. print publication date, was used. However, there can be considerable time-lag between online-first publication and issue inclusion. 
+Although the Web of Science database is a well-established bibliometric database in the quantitative science studies it comes with certain limitations that need careful consideration when using and interpreting our data. First, the Web of Science is selective in terms of journal inclusion, likely not covering the whole journal portfolio of the investigated publishers. Although publisher names were disambiguated, journal title transfers between publishers were not tracked. Furthermore, the year of inclusion in a journal issue, i.e. print publication date, was used. However, there can be a considerable time-lag between online-first publication and issue inclusion. 
 
-Moreover, as any other bibliometric databases, the data structure can be subject of change. In particular, our pretests suggest that the Web of Science author role field used to identify corresponding authorships has undergone a change recently, starting to covering more than one reprint author per article.
+Moreover, as any other bibliometric databases, the data structure can be subject of change. In particular, our pretests suggest that the Web of Science author role field used to identify corresponding authorships has undergone a change recently, starting to covering more than one reprint resp. corresponding author per article.
 
-The Bielefeld GOLD OA list was used to determine fully open access journals. However, it does not contain the date when a subscription-based journal became fully open access. The figures should be therefore interpreted numbers of articles available in current fully open access journals, instead of published in an fully open access journal at the time of publication. Open access article counts are therefore upper estimates.
+The Bielefeld GOLD OA list [@issn] was used to determine fully open access journals. However, it does not contain the date when a subscription-based journal became fully open access. The figures should be therefore interpreted as numbers of articles available in current fully open access journals, instead of published in an fully open access journal at the time of publication. Open access article counts are therefore upper estimates.
 
 Last, but not least, further qualitative evaluation of the dataset is still needed. Code and data are shared as research compendium to ensure the technical reproducibility of all steps involved in our data analytical work including this data descriptive.  
 
