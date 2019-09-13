@@ -6,6 +6,10 @@ csl: chicago.csl
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(janitor)
+library(scatterpie)
+library(knitr)
 knitr::opts_chunk$set(
   comment = "#>",
   collapse = TRUE,
@@ -29,7 +33,6 @@ knitr::knit_hooks$set(
     }
   }
 )
-library(tidyverse)
 ```
 
 ## Background & summary
@@ -122,26 +125,31 @@ Schema:
 
 ### Global publisher market share
  
-Based on the dataset `journal_publisher_14_18` the global market share of publishing houses in terms of articles and reviews indexed in the Web of Science can be analyzed for the period 2014-2018. Table 1 shows the overall market share for the ten largest publishers. Figure 1 presents a breakdown by journal business model, differentiating between toll access and fully open access. 
+Based on the dataset `journal_publisher_14_18` the global market share of publishing houses in terms of articles and reviews indexed in the Web of Science can be analyzed for the period 2014-2018. The following table  shows the overall market share for the ten largest publishers. The following figure presents a breakdown by journal business model, differentiating between toll access and fully open access. 
 
 ```{r, results='asis'}
 my_df <- readr::read_csv("../data/journal_publisher_14_18.csv")
-tt_all <- my_df %>% 
+tt_all <- my_df %>%
   group_by(publisher) %>%
   summarise(n = sum(articles)) %>%
-  mutate(prop = n /sum(n))  %>%
+  mutate(prop = n / sum(n))  %>%
   mutate(publisher = ifelse(is.na(publisher), "Other", publisher)) %>%
   arrange(desc(n)) %>%
   mutate(publisher_group = fct_other(publisher, keep = publisher[1:11])) %>%
   ungroup() %>%
   group_by(publisher_group) %>%
   summarise(n = sum(n), prop = sum(prop)) %>%
-  mutate(publisher_group = fct_reorder(publisher_group, n,)) %>%
+  mutate(publisher_group = fct_reorder(publisher_group, n, )) %>%
   mutate(publisher_group = fct_relevel(publisher_group, "Other")) %>%
   arrange(desc(publisher_group))
 tt_all %>%
   mutate(prop = prop * 100) %>%
-  knitr::kable(caption = "Publisher Market Share 2014 - 2018 in terms of articles and reviews indexed in the Web of Science", col.names = c("Publisher", "Articles and Reviews published", "Percentage"))
+  janitor::adorn_totals() %>%
+  knitr::kable(
+    caption = "Publisher Market Share 2014 - 2018 in terms of articles and reviews indexed in the Web of Science",
+    col.names = c("Publisher", "Articles and Reviews published", "Percentage"),
+    format.args = list(big.mark = ",")
+  )
 ```
 
 ```{r}
@@ -156,23 +164,51 @@ tt_oa <- my_df %>%
 plot_df <- tt_all %>%
   mutate(oa_journal = "All") %>%
   bind_rows(tt_oa) %>%
-  group_by(oa_journal) %>% 
-  mutate(label = format(sum(n), big.mark   = ",")) %>% 
+  group_by(oa_journal) %>%
+  mutate(label = format(sum(n), big.mark   = ",")) %>%
   mutate(label = paste0(oa_journal, " (", label, " Articles)")) %>%
   ungroup() %>%
   mutate(publisher_group = factor(publisher_group, levels = levels(tt_all$publisher_group)))
-tableau_palette <- rev(c("#ccc94d","#82853b","#86b4a9","#39737c","#ffd94a","#b85a0d","#98d9e4","#3cb7cc","#ffb977","#ff7f0f","#acd98d","#32a251"))
-p_bar <- ggplot(plot_df, aes(x="", y = prop, fill = publisher_group)) +
-  geom_bar(width = 1, stat = "identity", position = position_stack(reverse = FALSE)) +
-  facet_wrap(~label, ncol = 1) +
+tableau_palette <-
+  rev(
+    c(
+      "#ccc94d",
+      "#82853b",
+      "#86b4a9",
+      "#39737c",
+      "#ffd94a",
+      "#b85a0d",
+      "#98d9e4",
+      "#3cb7cc",
+      "#ffb977",
+      "#ff7f0f",
+      "#acd98d",
+      "#32a251"
+    )
+  )
+p_bar <-
+  ggplot(plot_df, aes(x = "", y = prop, fill = publisher_group)) +
+  geom_bar(width = 1,
+           stat = "identity",
+           position = position_stack(reverse = FALSE)) +
+  facet_wrap( ~ label, ncol = 1) +
   coord_flip() +
   geom_text(aes(label = paste0(round(prop, 2) * 100, "")), position = position_stack(vjust = .5)) +
- scale_fill_manual("", values = c("grey80", tableau_palette[1:10]), guide = guide_legend(reverse = TRUE,  ncol= 4)) +
-  scale_y_continuous(breaks = seq(0,1, by =0.1), labels = scales::percent_format(accuracy = 5L)) +
-  labs(title = "Global Publisher Market Shares 2014 - 2018", x = "", y = "",
-       subtitle = "Original Articles and Reviews indexed in the Web of Science\n\n",
-       caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science.\nPublisher names were disambiguated using Crossref metadata. OA status obtained from the Bielefeld GOLD OA list.\n
-    Funding: Federal Ministry of Education and Research of Germany (BMBF), Project OAUNI (01PU17023A)") +
+  scale_fill_manual(
+    "",
+    values = c("grey80", tableau_palette[1:10]),
+    guide = guide_legend(reverse = TRUE,  ncol = 4)
+  ) +
+  scale_y_continuous(breaks = seq(0, 1, by = 0.1),
+                     labels = scales::percent_format(accuracy = 5L)) +
+  labs(
+    title = "Global Publisher Market Shares 2014 - 2018",
+    x = "",
+    y = "",
+    subtitle = "Original Articles and Reviews indexed in the Web of Science\n\n",
+    caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science.\nPublisher names were disambiguated using Crossref metadata. OA status obtained from the Bielefeld GOLD OA list.\n
+    Funding: Federal Ministry of Education and Research of Germany (BMBF), Project OAUNI (01PU17023A)"
+  ) +
   #  scale_y_continuous(breaks = seq(0,1, by =0.1), labels = scales::percent_format(accuracy = 5L)) +
   theme_minimal(base_family = "Roboto", base_size = 16) +
   theme(plot.margin = margin(30, 30, 30, 30)) +
@@ -180,7 +216,7 @@ p_bar <- ggplot(plot_df, aes(x="", y = prop, fill = publisher_group)) +
   theme(axis.ticks = element_blank()) +
   theme(panel.grid.major.y = element_blank()) +
   theme(panel.border = element_blank()) +
-  theme(legend.position="bottom",
+  theme(legend.position = "bottom",
         legend.justification = "center")
 dir.create("figure")
 ggsave(
@@ -188,7 +224,8 @@ ggsave(
   plot = p_bar,
   width = 14,
   height = 9,
-  dpi = 300)
+  dpi = 300
+)
 ```
 
 ![Figure 3](figure/global_publisher_share.png)
@@ -278,7 +315,7 @@ gc %>%
   mutate(all_pubs = rowSums(.[5:11], na.rm = TRUE)) -> plot_wide
 tmp <- plot_wide %>%
   arrange(desc(all_pubs)) %>%
-  replace(., is.na(.), 0) 
+  replace(., is.na(.), 0)
 #' plot
 world <- map_data('world') %>%
   # without Antartica
@@ -348,14 +385,11 @@ p <- ggplot(world, aes(long, lat)) +
   theme(legend.position = "top",
         legend.justification = "right")
 
-ggsave(
-  "figure/map.png",
-  p,
-  dpi = 450,
-  height = 6,
-  width = 9
-)
-
+ggsave("figure/map.png",
+       p,
+       dpi = 450,
+       height = 6,
+       width = 9)
 ```
 
 ![Figure 4](figure/map.png)
@@ -363,13 +397,13 @@ ggsave(
 The following figure shows the country share per publisher in terms of original articles and reviews published in toll-access journals using corresponding author affiliations. The flipped x-axis shows the top 10 countries of affiliations in terms of articles published, while the y-axis depicts the percentage per publisher. The figure indicates, which countries were of particularly importance to a publisher. Furthermore, it suggests large variations across publishers. Take for instance the publisher Royal Society of Chemistry. Around every third article published in a toll-access journal was submitted from an author based in China, while the overall share of China-based authors was `r rp_df %>% filter(oa_journal == FALSE) %>% group_by(country_code) %>% summarise(n = sum(articles)) %>% arrange(desc(n)) %>% mutate(prop = n /sum(n)) %>% filter(country_code == "CHN") %>% .$prop * 100` %.
 
 ```{r}
-top_10_publisher <- rp_df %>% 
+top_10_publisher <- rp_df %>%
   filter(oa_journal == FALSE) %>%
   group_by(publisher) %>%
   summarise(n = sum(articles)) %>%
   arrange(desc(n)) %>%
   head(11) %>%
-  .$publisher 
+  .$publisher
 top_10_countries <- rp_df %>%
   filter(oa_journal == FALSE) %>%
   group_by(country_code) %>%
@@ -378,7 +412,7 @@ top_10_countries <- rp_df %>%
   head(10) %>%
   .$country_code
 plot_df <- rp_df %>%
-   filter(oa_journal == FALSE) %>%
+  filter(oa_journal == FALSE) %>%
   mutate(fct_publisher = ifelse(publisher %in% top_10_publisher, publisher, "Others")) %>%
   mutate(fct_publisher = ifelse(is.na(fct_publisher), "Others", fct_publisher)) %>%
   mutate(fct_countrcode = ifelse(country_code %in% top_10_countries, country_code, "Others")) %>%
@@ -386,12 +420,12 @@ plot_df <- rp_df %>%
   group_by(fct_publisher, fct_countrcode) %>%
   summarize(n = sum(articles)) %>%
   mutate(prop = n / sum(n)) %>%
-  ungroup() 
+  ungroup()
 #' plot
 ggplot(plot_df, aes(forcats::fct_rev(fct_countrcode), prop, fill = prop)) +
   coord_flip() +
   geom_bar(stat = "identity") +
-  facet_wrap( ~ fct_relevel(fct_publisher, top_10_publisher), ncol = 3) +
+  facet_wrap(~ fct_relevel(fct_publisher, top_10_publisher), ncol = 3) +
   scale_fill_viridis_c(
     "Country share per publisher (in %)",
     labels = scales::percent_format(accuracy = 5L),
@@ -412,16 +446,18 @@ ggplot(plot_df, aes(forcats::fct_rev(fct_countrcode), prop, fill = prop)) +
   theme(axis.ticks = element_blank()) +
   theme(panel.grid.major.y = element_blank()) +
   theme(panel.border = element_blank()) +
-  theme(legend.position = "top",
-        legend.justification = "right",
-        legend.text=element_text(size =  9)) -> p
+  theme(
+    legend.position = "top",
+    legend.justification = "right",
+    legend.text = element_text(size =  9)
+  ) -> p
 #' save as png
 ggsave(
   "figure/publisher_share.png",
   p,
   dpi = 450,
-  height = 12,
-  width = 16
+  height = 13,
+  width = 17
 )
 ```
 

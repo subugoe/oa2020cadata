@@ -26,7 +26,8 @@ Imports:
     tidyverse,
     writexl,
     countrycode,
-    scatterpie
+    scatterpie,
+    janitor
 Suggests:
     rcrossref
 Encoding: UTF-8

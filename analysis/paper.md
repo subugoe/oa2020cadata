@@ -198,25 +198,26 @@ Schema:
 
 Based on the dataset `journal_publisher_14_18` the global market share
 of publishing houses in terms of articles and reviews indexed in the Web
-of Science can be analyzed for the period 2014-2018. Table 1 shows the
-overall market share for the ten largest publishers. Figure 1 presents a
-breakdown by journal business model, differentiating between toll access
-and fully open
+of Science can be analyzed for the period 2014-2018. The following table
+shows the overall market share for the ten largest publishers. The
+following figure presents a breakdown by journal business model,
+differentiating between toll access and fully open
 access.
 
 | Publisher                                                | Articles and Reviews published | Percentage |
 | :------------------------------------------------------- | -----------------------------: | ---------: |
-| Elsevier BV                                              |                        1942425 |       23.8 |
-| Springer Nature                                          |                        1134385 |       13.9 |
-| Wiley                                                    |                         711824 |        8.7 |
-| Informa UK Limited                                       |                         411910 |        5.0 |
-| American Chemical Society (ACS)                          |                         216320 |        2.6 |
-| SAGE Publications                                        |                         190534 |        2.3 |
-| Royal Society of Chemistry (RSC)                         |                         189477 |        2.3 |
-| Institute of Electrical and Electronics Engineers (IEEE) |                         178400 |        2.2 |
-| Oxford University Press (OUP)                            |                         176699 |        2.2 |
-| Ovid Technologies (Wolters Kluwer Health)                |                         149951 |        1.8 |
-| Other                                                    |                        2849986 |       35.0 |
+| Elsevier BV                                              |                      1,942,425 |       23.8 |
+| Springer Nature                                          |                      1,134,385 |       13.9 |
+| Wiley                                                    |                        711,824 |        8.7 |
+| Informa UK Limited                                       |                        411,910 |        5.0 |
+| American Chemical Society (ACS)                          |                        216,320 |        2.6 |
+| SAGE Publications                                        |                        190,534 |        2.3 |
+| Royal Society of Chemistry (RSC)                         |                        189,477 |        2.3 |
+| Institute of Electrical and Electronics Engineers (IEEE) |                        178,400 |        2.2 |
+| Oxford University Press (OUP)                            |                        176,699 |        2.2 |
+| Ovid Technologies (Wolters Kluwer Health)                |                        149,951 |        1.8 |
+| Other                                                    |                      2,849,986 |       35.0 |
+| Total                                                    |                      8,151,911 |      100.0 |
 
 Publisher Market Share 2014 - 2018 in terms of articles and reviews
 indexed in the Web of Science
