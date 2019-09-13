@@ -120,7 +120,7 @@ rp_df <- rp_publisher %>%
   distinct()
 ```
 
-Crossref indexed 88.18 % of Web of Science journals.
+Crossref indexed 88.1767313 % of Web of Science journals.
 
 The following table shows the number of journals per publisher.
 
@@ -224,14 +224,14 @@ rp_df_oa %>%
     journal_title, publisher, oa_journal,
     issn_l = `ISSN-L`
     ) %>%
-  write_csv("../data/publisher_14_18.csv")
+  write_csv("../data/journal_publisher_14_18.csv")
 ```
 
 Dump to Excel
 
 ``` r
-readr::read_csv("../data/publisher_14_18.csv") %>%
-  writexl::write_xlsx("../data/publisher_14_18.xlsx")
+readr::read_csv("../data/journal_publisher_14_18.csv") %>%
+  writexl::write_xlsx("../data/journal_publisher_14_18.xlsx")
 ```
 
 Data Schema:

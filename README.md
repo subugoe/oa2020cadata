@@ -9,7 +9,7 @@
 
 ### Overview
 
-This repository is a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) providing a dataset about corresponding author country affiliations indexed in the Web of Science 2014 - 2018. The compendium contains data, code, and text associated with it. The R Markdown files in the [`analysis/`](analysis/) directory provide details about the data analysis, particularly about how the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) was interfaced, as well as the [data descriptive](analysis/paper.md). The [`data/`](data/) directory contains all aggregated data. Because of the proprietary nature of the Web of Science, no raw data and no access to the in-house database can be shared. 
+This repository is a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) providing a dataset about corresponding author country affiliations indexed in the Web of Science 2014 - 2018. A research compendium contains data, code, and text associated with it. The R Markdown files in the [`analysis/`](analysis/) directory provide details about the data analysis, particularly about how the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) was interfaced, and the [*Data Descriptive*](analysis/paper.md). The [`data/`](data/) directory contains all aggregated data. Because of the proprietary nature of the Web of Science, no raw data and no access to the in-house database can be shared. 
 
 ### Analysis files
 
@@ -21,8 +21,8 @@ Analytical steps for obtaining the data from the Web of Science in-house databas
 
 - [`001_kb_rp_pretest.Rmd`](analysis/001_kb_rp_pretest.Rmd) - Initial exploration about how corresponding authorships are represented in the WoS-KB. Link to the [rendered report](analysis/001_kb_rp_pretest.md)
 - [`002_kb_rp_coverage.Rmd`](analysis/002_kb_rp_coverage.Rmd) - Coverage analysis of reprint authors in the WoS-KB for the period 2014 - 2018. Link to the [rendered report](analysis/002_kb_rp_coverage.md)
-- [`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd) - Obtain and compile the dataset about corresponding author country affiliations 2014 - 2018. Link to the [rendered report](analysis/003_kb_fetch_ca.md)
-- [`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd) - Obtain and compile the dataset about the global publisher output 2014 - 2018. Link to the [rendered report](analysis/004_kb_fetch_publisher.md)
+- [`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd) - Steps to obtain and compile the dataset about corresponding author country affiliations 2014 - 2018. Link to the [rendered report](analysis/003_kb_fetch_ca.md)
+- [`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd) - Steps to obtain and compile the dataset about the global publisher output 2014 - 2018. Link to the [rendered report](analysis/004_kb_fetch_publisher.md)
 
 ### Data files
 
@@ -30,7 +30,7 @@ The [`data/`](data/) directory contains the resulting datasets stored as comma-s
 
 - [`rp_data_14_18.csv`](data/rp_data_14_18.csv) - Corresponding author country affiliations per publisher, journal and open access publishing model 2014 - 2018
 - [`rp_jn_14_18.csv`](data/rp_jn_14_18.csv) - Corresponding author country affiliations per publisher and journal as provided by the WoS-KB
-- [`publisher_14_18.csv`](data/publisher_14_18.csv) - Global publisher and journal output 2014 - 2018 
+- [`journal_publisher_14_18.csv`](data/journal_publisher_14_18.csv) - Global publisher and journal output 2014 - 2018 
 - [`cr_wos.csv`](data/cr_wos.csv) - Matching table publisher and journal infos Crossref / Web of Science
 - [`20190818.ISSN-to-ISSN-L.txt`](data/20190818.ISSN-to-ISSN-L.txt) - ISSN matching table from <https://www.issn.org/understanding-the-issn/assignment-rules/the-issn-l-for-publications-on-multiple-media/>
 - [`geocodes.csv`](data/geocodes.csv) - Country geocodes obtained from <https://developers.google.com/public-data/docs/canonical/countries_csv>
@@ -39,7 +39,7 @@ The [`data/`](data/) directory contains the resulting datasets stored as comma-s
 
 This repository follows the concept of a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) that uses the R package structure to port data and code. 
 
-Because access to the data infrastructure of the German Competence Center for Bibliometrics (WoS-KB) is restricted, there are different levels of reproducibilty. Everyone will be able to reproduce the anaylsis in the [data descriptive](analysis/paper.md), the main document of this research compendium written in R Markdown. Users with access to the WoS-KB data infrastructure will also be able to replicate the R code and SQL queries locally, or on the script server.
+Because access to the data infrastructure of the German Competence Center for Bibliometrics (WoS-KB) is restricted, there are different levels of reproducibility. Everyone will be able to reproduce the analysis in the [data descriptive](analysis/paper.md), the main document of this research compendium written in R Markdown. Users with access to the WoS-KB data infrastructure will also be able to replicate the R code and SQL queries locally, or on the script server.
 
 #### Data Descriptive
 
@@ -58,27 +58,27 @@ devtools::install_deps(repos = list(CRAN = 'http://mran.revolutionanalytics.com/
 To replicate the data descriptive:
 
 ```r
-rmarkdown::render("anaylsis/paper.Rmd")
+rmarkdown::render("analysis/paper.Rmd")
 ```
 
 #### Binder 
 
-Using the [holepunch-package](https://github.com/karthik/holepunch) the project was made Binder ready. Binder allows you to execute the data descriptive in the cloud in your webbrowser.
+Using the [holepunch-package](https://github.com/karthik/holepunch) the project was made Binder ready. Binder allows you to execute the data descriptive in the cloud in your web browser.
 
 [![Launch Rstudio Binder](http://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/subugoe/oa2020cadata/master?urlpath=rstudio)
 
 #### User with access to the  German Competence Center for Bibliometrics data infrastructure
 
-If you have access to the Competence Center of Bibliometrics data infrastructure, you can also replicate how data was obtained from the Web of Science. These steps are described in the R Markdown documents, starting with `00` in the [`analysis/`](analysis/) folder.
+If you have access to the Competence Center of Bibliometrics data infrastructure, you can  replicate how data was obtained from the Web of Science. These steps are described in the R Markdown documents, starting with `00` in the [`analysis/`](analysis/) folder.
 
-To get started, follow the steps described above to download the research compendium including the necessary R packages. Next, add your database login credentials to your `.Renviron` file and save it. 
+To get started, follow the steps described above to download the research compendium including the necessary R packages. Next, add your database login credentials to your `.Renviron` file and save it. You can open your `.Renviron` file from R with `usethis::edit_r_environ()`. 
 
 ```
 kb_user="najko"
 kb_pwd="12345"
 ```
 
-You can open your `.Renviron` file from R with `usethis::edit_r_environ()`. Reload your R session.
+Reload your R session.
 
 The Oracle database driver needed to access the remote database is included in this repository.
 
@@ -110,11 +110,15 @@ Source Code: MIT (Najko Jahn, 2019)
 
 ### Contributors
 
+- Design and conceptualization:
+- Data Analysis:
+- Writing and Review:
+
 ### Contributing
 
-This data anyltics works has been developed using open tools. There are a number of ways you can help make it better:
+This data analytics works has been developed using open tools. There are a number of ways you can help make it better:
 
-If you don’t understand something, please let me know and submit an issue.
+- If you don’t understand something, please let me know and [submit an issue](https://github.com/subugoe/oa2020cadata).
 
 Feel free to add new features or fix bugs by sending a pull request.
 
