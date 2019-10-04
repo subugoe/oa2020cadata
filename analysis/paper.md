@@ -48,22 +48,22 @@ operating under a fully open access or toll-access business model. In
 its most recent edition, the Leiden Ranking presents open access
 indicators at the level of universities (Leeuwen, Costas, and
 Robinson-Garcia 2019). In addition to university-specific data, the
-German Open Access Monitor, provides breakdowns by publisher and
-journal, as well as the inclusion of publications from non-university
-research institutions based in Germany (Mittermaier et al. 2018).
+German Open Access Monitor provides breakdowns by publisher and journal
+and includes publications from non-university research institutions
+based in Germany (Mittermaier et al. 2018).
 
 Here, we build an open dataset on the global productivity of
 corresponding authors. Drawing on Palzenberger’s (2015) previous work,
 we not only created an updated dataset about the number and proportion
 of scholarly articles per country of affiliation from corresponding
 authors. The dataset also allows for a breakdown by journal, including
-information whether the journal is currently fully open access or not,
-and by publishers. We constructed the dataset using the quality assured
-Web of Science in-house database from the German Competence Center for
-Bibliometrics. We enriched the data with publisher information from
-Crossref, a large DOI registration agency for scholarly work, and with
-open access journal information provided by the Biefeld GOLD OA list
-(Bruns et al. 2019).
+information whether it was operated as a subscription or fully open
+access, and by publishers. We constructed the dataset using the quality
+assured Web of Science in-house database from the German Competence
+Center for Bibliometrics. We enriched the data with publisher
+information from Crossref, a large DOI registration agency for scholarly
+work, and with open access journal information provided by the Biefeld
+GOLD OA list (Bruns et al. 2019).
 
 The data cannot only serve as a critical input for negotiations in the
 context of transformative agreements, but also in the quantitative study
@@ -73,9 +73,9 @@ publishers will increase opportunities to publish open access. They will
 therefore likely have an impact on the open access share of a country
 with such agreements. To demonstrate the dataset’s potential
 significance, we will present two new findings using the dataset: a
-global map of publishers’s toll-access market share, and an analysis of
-country of affiliation by publisher. Source code used for compiling the
-dataset is shared along with the resulting datasets.
+global map of publishers’s market share, and an analysis of country of
+affiliation by publisher. Source code used for compiling the dataset is
+shared along with the resulting datasets.
 
 ## Data and Methods
 
@@ -91,19 +91,19 @@ Bibliometrics. The following data were obtained and aggregated:
   - Author roles, interpreting the role “reprint author” as
     corresponding authorship.
 
-There has been some concerns to allocate open access spending based on
+There have been some concerns to allocate open access spending based on
 corresponding authorships, because it has become challenging to count
-corresponding author affiliations straight, i.e. a counting method where
-one institution or country receives full credit for a publication
-(Huang, Lin, and Chen 2011, @Gumpenberger\_2018). Indeed, the Web of
-Science has begun to systematically keep track of more than one
-corresponding author recently (see Figure 1). We also found that the Web
-of Science did record more than one corresponding author for 6.2% of
-indexed articles published between 2014 - 2018. Moreover, a 5% of
-corresponding authors author was internationally co-located (see Figure
-2). We therefore decided to use whole counting where every original
-article or review was counted once per country of affiliation of the
-corresponding author(s).
+corresponding author affiliations straight (Gumpenberger, Hölbling, and
+Gorraiz 2018). Under this counting method, only one institution or one
+country receives full credit for a publication (Huang, Lin, and Chen
+2011). Indeed, the Web of Science has begun to systematically keep track
+of more than one corresponding author recently (see Figure 1). We also
+found that the Web of Science did record more than one corresponding
+author for 6.2% of indexed articles published between 2014 - 2018.
+Moreover, a 5% of corresponding authors author was internationally
+co-located (see Figure 2). We therefore decided to use whole counting
+where every original article or review was counted once per country of
+affiliation of the corresponding author(s).
 
 ![Figure 1](002_kb_rp_coverage_files/figure-gfm/ca_author_count-1.png)
 

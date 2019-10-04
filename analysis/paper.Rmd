@@ -41,11 +41,11 @@ Assessing the volume and share of corresponding author publications is crucial f
 
 Only a few openly available datasets focusing on the scholarly publishing industry exist. For example, @haustein_2015 shared an aggregated dataset that contains the market share of publishers in terms of articles indexed in the Web of Science between 1973-2013. Using this data, the authors were able to reveal a growing market concentration among a few publishing houses [@Larivi_re_2015]. @Palzenberger_2015 provided a dataset presenting the number and proportion of scholarly articles by country of affiliation including a breakdown by author role for the period 2004-2014. Published in 2015, this dataset, which was obtained from the Web of Science in-house database from the German Competence Center for Bibliometrics, formed the empirical basis for demonstrating that a large-scale transition from a subscription-based to an open access business model is feasible based on the current total spending on scholarly journals [@Schimmer_2015]. Since then, analyzing the productivity of corresponding authors in terms of articles published in dedicated journal portfolios has been perceived as a critical component of open access negotiations.
 
-There have also been analytical applications for such datasets. Major bibliometric databases including the Web of Science, Scopus and Dimension have started to integrate open access status information. In these databases, Unpaywall data is often used to identify openly available full-texts at the article-level, while the Directory of Open Access Journals provides information about whether the journal is operating under a fully open access or toll-access business model. In its most recent edition, the Leiden Ranking presents open access indicators at the level of universities [@leiden]. In addition to university-specific data, the German Open Access Monitor, provides breakdowns by publisher and journal, as well as the inclusion of publications from non-university research institutions based in Germany [@oa_monitor].
+There have also been analytical applications for such datasets. Major bibliometric databases including the Web of Science, Scopus and Dimension have started to integrate open access status information. In these databases, Unpaywall data is often used to identify openly available full-texts at the article-level, while the Directory of Open Access Journals provides information about whether the journal is operating under a fully open access or toll-access business model. In its most recent edition, the Leiden Ranking presents open access indicators at the level of universities [@leiden]. In addition to university-specific data, the German Open Access Monitor provides breakdowns by publisher and journal and includes publications from non-university research institutions based in Germany [@oa_monitor].
 
-Here, we build an open dataset on the global productivity of corresponding authors. Drawing on Palzenberger's (2015) previous work, we not only created an updated dataset about the number and proportion of scholarly articles per country of affiliation from corresponding authors. The dataset also allows for a breakdown by journal, including information whether the journal is currently fully open access or not, and by publishers. We constructed the dataset using the quality assured Web of Science in-house database from the German Competence Center for Bibliometrics. We enriched the data with publisher information from Crossref, a large DOI registration agency for scholarly work, and with open access journal information provided by the Biefeld GOLD OA list [@issn].
+Here, we build an open dataset on the global productivity of corresponding authors. Drawing on Palzenberger's (2015) previous work, we not only created an updated dataset about the number and proportion of scholarly articles per country of affiliation from corresponding authors. The dataset also allows for a breakdown by journal, including information whether it was operated as a subscription or fully open access, and by publishers. We constructed the dataset using the quality assured Web of Science in-house database from the German Competence Center for Bibliometrics. We enriched the data with publisher information from Crossref, a large DOI registration agency for scholarly work, and with open access journal information provided by the Biefeld GOLD OA list [@issn].
 
-The data cannot only serve as a critical input for negotiations in the context of transformative agreements, but also in the quantitative study of the academic publishing industry and the open access uptake across countries. For instance, national transformative agreements with large publishers will increase opportunities to publish open access. They  will therefore likely have an impact on the open access share of a country with such agreements. To demonstrate the dataset's potential significance, we will present two new findings using the dataset: a global map of publishers's toll-access market share, and an analysis of country of affiliation by publisher. Source code used for compiling the dataset is shared along with the resulting datasets. 
+The data cannot only serve as a critical input for negotiations in the context of transformative agreements, but also in the quantitative study of the academic publishing industry and the open access uptake across countries. For instance, national transformative agreements with large publishers will increase opportunities to publish open access. They  will therefore likely have an impact on the open access share of a country with such agreements. To demonstrate the dataset's potential significance, we will present two new findings using the dataset: a global map of publishers's market share, and an analysis of country of affiliation by publisher. Source code used for compiling the dataset is shared along with the resulting datasets. 
 
 ## Data and Methods
 
@@ -58,7 +58,7 @@ Following @Palzenberger_2015, data were retrieved from the in-house Web of Scien
 - Publication years 2014 - 2018 
 - Author roles, interpreting the role "reprint author" as corresponding authorship.
 
-There has been some concerns to allocate open access spending based on corresponding authorships, because it has become challenging to count corresponding author affiliations straight, i.e. a counting method where one institution or country receives full credit for a publication [@Huang_2011, @Gumpenberger_2018]. Indeed, the Web of Science has begun to systematically keep track of more than one corresponding author recently (see Figure 1). We also found that the Web of Science did record more than one corresponding author for 6.2% of indexed articles published between 2014 - 2018. Moreover, a 5% of corresponding authors author was internationally co-located (see Figure 2). We therefore decided to use whole counting where every original article or review was counted once per country of affiliation of the corresponding author(s).
+There have been some concerns to allocate open access spending based on corresponding authorships, because it has become challenging to count corresponding author affiliations straight [@Gumpenberger_2018]. Under this counting method, only one institution or one country receives full credit for a publication [@Huang_2011]. Indeed, the Web of Science has begun to systematically keep track of more than one corresponding author recently (see Figure 1). We also found that the Web of Science did record more than one corresponding author for 6.2% of indexed articles published between 2014 - 2018. Moreover, a 5% of corresponding authors author was internationally co-located (see Figure 2). We therefore decided to use whole counting where every original article or review was counted once per country of affiliation of the corresponding author(s).
 
 ![Figure 1](002_kb_rp_coverage_files/figure-gfm/ca_author_count-1.png)
 
@@ -157,7 +157,7 @@ tt_oa <- my_df %>%
   mutate(publisher_group = ifelse(publisher %in% tt_all$publisher_group, publisher, "Other")) %>%
   group_by(publisher_group, oa_journal) %>%
   summarise(n = sum(articles)) %>%
-  mutate(oa_journal = ifelse(oa_journal == TRUE, "Open Access", "Toll Access")) %>%
+  mutate(oa_journal = ifelse(oa_journal == TRUE, "Full Open Access", "Subscription")) %>%
   ungroup() %>%
   group_by(oa_journal) %>%
   mutate(prop = n / sum(n))
@@ -169,22 +169,18 @@ plot_df <- tt_all %>%
   mutate(label = paste0(oa_journal, " (", label, " Articles)")) %>%
   ungroup() %>%
   mutate(publisher_group = factor(publisher_group, levels = levels(tt_all$publisher_group)))
-tableau_palette <-
-  rev(
-    c(
-      "#ccc94d",
-      "#82853b",
-      "#86b4a9",
-      "#39737c",
-      "#ffd94a",
-      "#b85a0d",
-      "#98d9e4",
-      "#3cb7cc",
-      "#ffb977",
-      "#ff7f0f",
-      "#acd98d",
-      "#32a251"
-    )
+london_palette <-
+  c(
+    "#6da7de",
+    "#9e0059",
+    "#dee000",
+    "#d82222",
+    "#5ea15d",
+    "#943fa6",
+    "#63c5b5",
+    "#ff38ba",
+    "#eb861e",
+    "#ee266d"
   )
 p_bar <-
   ggplot(plot_df, aes(x = "", y = prop, fill = publisher_group)) +
@@ -196,7 +192,7 @@ p_bar <-
   geom_text(aes(label = paste0(round(prop, 2) * 100, "")), position = position_stack(vjust = .5)) +
   scale_fill_manual(
     "",
-    values = c("grey80", tableau_palette[1:10]),
+    values = c("grey80", rev(london_palette[1:10])),
     guide = guide_legend(reverse = TRUE,  ncol = 4)
   ) +
   scale_y_continuous(breaks = seq(0, 1, by = 0.1),
@@ -275,11 +271,11 @@ my_df %>%
   mutate(countries = ifelse(eu %in% "EU28", "EU28", country_code)) -> df_to_plot
 #' top 5 publisher closed
 my_df %>%
-  filter(oa_journal == FALSE) %>%
+ # filter(oa_journal == FALSE) %>%
   group_by(publisher) %>%
   summarise(n = sum(articles)) %>%
   arrange(desc(n)) %>%
-  head(7) %>%
+  head(11) %>%
   .$publisher -> top_6
 #' data transformation to prepare plotting of corresponding authors' country of affilation
 df_to_plot %>%
@@ -352,27 +348,19 @@ p <- ggplot(world, aes(long, lat)) +
     size = sqrt(tmp$all_pubs / 50000)
   ) +
   scale_fill_manual(
-    "Publisher",
-    values = c(
-      "Elsevier BV" = "#E69F00",
-      "Springer Nature" = "#0072B2",
-      "Wiley" = "#56B4E9",
-      "Informa UK Limited" = "#009E73",
-      "American Chemical Society (ACS)" = "#F0E442",
-      "SAGE Publications" = "#D55E00",
-      "Others" = "#fcfcfc"
-    ),
+    "",
+    values = c(london_palette, "#fcfcfc"),
     limits = levels(plot_df$fct_publisher)
   ) +
   coord_equal() +
   theme_minimal()  +
   labs(
-    title = "Who did publish in toll-access journals between 2014 - 2018?",
+    title = "Who did publish in scholarly journals between 2014 - 2018?",
     x = "",
     y = "",
-    caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science.\nPublisher names were disambiguated using Crossref metadata. OA status obtained from the Bielefeld GOLD OA list.\n
+    caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science.
     Funding: Federal Ministry of Education and Research of Germany (BMBF), Project OAUNI (01PU17023A)",
-    subtitle = "Circle size represents the number of corresponding authorships of original articles and reviews per country"
+    subtitle = "Circle size represents the number of corresponding authorships of original articles and reviews per country\n"
   ) +
   theme_minimal(base_family = "Roboto") +
   theme(plot.margin = margin(10, 30, 10, 30)) +
@@ -382,14 +370,21 @@ p <- ggplot(world, aes(long, lat)) +
   theme(panel.border = element_blank()) +
   theme(axis.ticks = element_blank(),
         axis.text = element_blank()) +
-  theme(legend.position = "top",
-        legend.justification = "right")
+  theme(legend.position = "bottom",
+        legend.justification = "center") +
+  theme(legend.text = element_text(size = 7.5))
 
 ggsave("figure/map.png",
        p,
        dpi = 450,
        height = 6,
-       width = 9)
+       width = 10)
+ggsave("figure/map.pdf",
+       p,
+       device = cairo_pdf,
+       dpi = 450,
+       height = 6,
+       width = 10)
 ```
 
 ![Figure 4](figure/map.png)
