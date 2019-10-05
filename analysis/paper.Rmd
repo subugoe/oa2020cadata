@@ -157,12 +157,12 @@ tt_oa <- my_df %>%
   mutate(publisher_group = ifelse(publisher %in% tt_all$publisher_group, publisher, "Other")) %>%
   group_by(publisher_group, oa_journal) %>%
   summarise(n = sum(articles)) %>%
-  mutate(oa_journal = ifelse(oa_journal == TRUE, "in Fully Open Access Journals", "in Subscription Journals")) %>%
+  mutate(oa_journal = ifelse(oa_journal == TRUE, "Fully Open Access", "Subscription")) %>%
   ungroup() %>%
   group_by(oa_journal) %>%
   mutate(prop = n / sum(n))
 plot_df <- tt_all %>%
-  mutate(oa_journal = "Overall Article Volume") %>%
+  mutate(oa_journal = "All Journals") %>%
   bind_rows(tt_oa) %>%
   group_by(oa_journal) %>%
   mutate(label = format(sum(n), big.mark   = ",")) %>%
