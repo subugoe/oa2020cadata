@@ -28,8 +28,8 @@ Analytical steps for obtaining the data from the Web of Science in-house databas
 
 The [`data/`](data/) directory contains the resulting datasets stored as comma-separated value files.
 
-- [`rp_data_14_18.csv`](data/rp_data_14_18.csv) - Corresponding author country affiliations per publisher, journal and open access publishing model 2014 - 2018
-- [`rp_jn_14_18.csv`](data/rp_jn_14_18.csv) - Corresponding author country affiliations per publisher and journal as provided by the WoS-KB
+
+- [`rp_jn_14_18.csv`](data/rp_jn_14_18.csv) - Corresponding author country affiliations per publisher, journal and open access publishing model 2014 - 2018
 - [`journal_publisher_14_18.csv`](data/journal_publisher_14_18.csv) - Global publisher and journal output 2014 - 2018 
 - [`cr_wos.csv`](data/cr_wos.csv) - Matching table publisher and journal infos Crossref / Web of Science
 - [`20190818.ISSN-to-ISSN-L.txt`](data/20190818.ISSN-to-ISSN-L.txt) - ISSN matching table from <https://www.issn.org/understanding-the-issn/assignment-rules/the-issn-l-for-publications-on-multiple-media/>
