@@ -1,0 +1,164 @@
+---
+title: "WoS Crossref Journal Match"
+output: github_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE)
+```
+
+## Retrieve WoS-KB journal infos
+
+Connect to database
+
+```{r}
+# deal with rJava memory allocation 
+# https://stackoverflow.com/questions/34624002/r-error-java-lang-outofmemoryerror-java-heap-space
+options(java.parameters = "-Xmx1024m")
+require(tidyverse)
+require(RJDBC)
+require(rJava)
+.jinit()
+jdbcDriver <-
+  JDBC(driverClass = "oracle.jdbc.OracleDriver", classPath = "../inst/jdbc_driver/ojdbc8.jar")
+jdbcConnection <-
+  dbConnect(
+    jdbcDriver,
+    "jdbc:oracle:thin:@//biblio-p-db01:1521/bibliodb01.fiz.karlsruhe",
+    Sys.getenv("kb_user"),
+    Sys.getenv("kb_pwd")
+  ) 
+```
+
+Search criteria 
+
+- Database: wos_b_2019
+- Document Types: Articles and Reviews
+- Database Collections: `WOS.SCI`, `WOS.SSCI`, `WOS.AHCI`
+- Publication Period 2014 - 2018
+
+#### Query 
+
+```{sql connection=jdbcConnection, output.var="wos_jn"}
+select
+        wos_b_2019.items.pubyear,
+        wos_b_2019.issues.issn,
+        count(distinct(ut_eid)) as pubs                         
+    from
+        wos_b_2019.items                                            
+    inner join
+        wos_b_2019.databasecollection                                                                                          
+            on wos_b_2019.databasecollection.fk_items =  wos_b_2019.items.pk_items                                  
+    inner join
+        wos_b_2019.issues                                                        
+            on wos_b_2019.issues.pk_issues = wos_b_2019.items.fk_issues                             
+    where
+        wos_b_2019.databasecollection.edition_value in (
+            'WOS.SCI', 'WOS.SSCI', 'WOS.AHCI'                                                   
+        )                                                                              
+        and wos_b_2019.items.doctype in (
+            'Article', 'Review'                                                   
+        )                                                                               
+        and wos_b_2019.items.pubyear in (
+            2014, 2015, 2016, 2017, 2018                                                   
+        )                                                  
+    group by
+        wos_b_2019.items.pubyear,
+        wos_b_2019.issues.issn
+```
+
+Backup 
+
+```{r}
+readr::write_csv(wos_jn, "../data/wos_jns.csv")
+```
+
+#### Populate with ISSN info including ISSN-L
+
+```{r}
+# load issn l list
+wos_jn <- readr::read_csv("../data/wos_jns.csv")
+issn_l <- readr::read_tsv("../data/20190818.ISSN-to-ISSN-L.txt")
+issn_wos_match <- wos_jn %>%
+  distinct(ISSN) %>%
+  left_join(issn_l, by = c("ISSN")) 
+issn_variants <-
+  issn_wos_match %>% 
+  inner_join(issn_l, by = c("ISSN-L")) %>%
+  distinct(`ISSN-L`, ISSN = ISSN.y)
+issn_variants
+```
+
+#### Crossref Match 
+
+Per every ISSN-L, obtain all ISSN variants and query Crossref for most frequent publisher and journal title
+
+Generate queries
+
+```{r}
+issns_list <-
+  purrr::map(unique(issn_variants$`ISSN-L`), function(x) {
+    issn_l <- x
+    issns <- issn_variants %>%
+      filter(`ISSN-L` %in% issn_l) %>%
+      .$ISSN
+    names(issns) <- rep("issn", length(issns))
+    issns
+  })
+```
+
+Define and call function
+
+```{r}
+#' search crossref
+require(rcrossref)
+jn_facets <- purrr::map(issns_list[66], .f = purrr::safely(function(x) {
+  tt <- rcrossref::cr_works(
+    filter = c(
+      x,
+      from_pub_date = "2014-01-01",
+      until_pub_date = "2018-12-31",
+      type = "journal-article"
+    ),
+    # being explicit about facets improves API performance!
+    facet = "container-title:*,publisher-name:*",
+    # less api traffic
+    select = "DOI"
+  )
+  #' Parse the relevant information
+  #' - `journal_title` - Crossref journal title (in case of journal name change, we use the most frequent name)
+  #' - `publisher` - Crossref publisher (in case of publisher name change, we use the most frequent name)
+  #'
+  #' To Do: switch to current potential
+  if (!is.null(tt)) {
+    tibble::tibble(
+      issn = list(x),
+      journal_title = tt$facets$`container-title`$.id[1],
+      publisher = tt$facets$publisher$.id[1]
+    )
+  } else {
+    NULL
+  }
+}))
+```
+
+Generate queries
+
+```{r}
+issns_list <-
+  purrr::map(unique(issn_variants$`ISSN-L`), function(x) {
+    issn_l <- x
+    issns <- issn_variants %>%
+      filter(`ISSN-L` %in% issn_l) %>%
+      .$ISSN
+    names(issns) <- rep("issn", length(issns))
+    issns
+  })
+```
+
+#' Dump:
+jn_facets_df <- purrr::map_df(jn_facets, "result")
+jsonlite::stream_out(jn_facets_df, file("../data/jn_facets_df.json"))
