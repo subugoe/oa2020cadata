@@ -115,7 +115,7 @@ Define and call function
 ```{r}
 #' search crossref
 require(rcrossref)
-jn_facets <- purrr::map(issns_list[66], .f = purrr::safely(function(x) {
+jn_facets <- plyr::llply(issns_list, purrr::safely(function(x) {
   tt <- rcrossref::cr_works(
     filter = c(
       x,
@@ -142,23 +142,41 @@ jn_facets <- purrr::map(issns_list[66], .f = purrr::safely(function(x) {
   } else {
     NULL
   }
-}))
+}), .progress = "text")
 ```
-
-Generate queries
 
 ```{r}
-issns_list <-
-  purrr::map(unique(issn_variants$`ISSN-L`), function(x) {
-    issn_l <- x
-    issns <- issn_variants %>%
-      filter(`ISSN-L` %in% issn_l) %>%
-      .$ISSN
-    names(issns) <- rep("issn", length(issns))
-    issns
-  })
-```
-
 #' Dump:
 jn_facets_df <- purrr::map_df(jn_facets, "result")
-jsonlite::stream_out(jn_facets_df, file("../data/jn_facets_df.json"))
+cr_jn <- jn_facets_df %>% 
+  unnest(issn)
+readr::write_csv(cr_jn, "../data/cr_wos.csv")
+```
+
+#### ADD ISSN-L
+
+```{r}
+cr_journals <- readr::read_csv("../data/cr_wos.csv") %>%
+  # merge springer nature brands
+  mutate(publisher = ifelse(grepl("Springer", publisher, fixed = FALSE), "Springer Nature", publisher))
+rp_country <- readr::read_csv("../data/rp_data_14_18.csv")
+issn_l <- readr::read_tsv("../data/20190818.ISSN-to-ISSN-L.txt") %>%
+  # manual fix Journal - American Water Works 
+  add_row(ISSN = "2164-4535", `ISSN-L` = "0003-150X")
+rp_df <- rp_country %>%
+  left_join(issn_l, by = "ISSN") %>%
+  left_join(cr_journals, by = c(ISSN = "issn")) %>%
+  distinct()
+```
+
+#### Add OA info
+
+```{r}
+u <- "https://pub.uni-bielefeld.de/download/2934907/2934908/ISSN_Gold-OA_3.0.csv"
+bie_oa <- readr::read_csv(u) %>%
+  # remove missing entries with missing ISSN_L
+  filter(!is.na(ISSN_L))
+# add info to rp_df
+rp_df_oa <- rp_df %>%
+  mutate(oa_journal = `ISSN-L` %in% bie_oa$`ISSN_L`)
+```
