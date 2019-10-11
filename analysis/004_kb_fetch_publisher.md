@@ -109,18 +109,16 @@ joined with the WoS data.
 cr_journals <- readr::read_csv("../data/cr_wos.csv") %>%
   # merge springer nature brands
   mutate(publisher = ifelse(grepl("Springer", publisher, fixed = FALSE), "Springer Nature", publisher))
-rp_publisher <- readr::read_csv("../data/publisher_league_14_18.csv")
 issn_l <- readr::read_tsv("../data/20190818.ISSN-to-ISSN-L.txt") %>%
   # manual fix Journal - American Water Works 
   add_row(ISSN = "2164-4535", `ISSN-L` = "0003-150X")
 rp_df <- rp_publisher %>%
   left_join(issn_l, by = "ISSN") %>%
-  left_join(cr_journals, by = c(`ISSN-L`= "issn_l")) %>%
-  select(-issn) %>%
+  left_join(cr_journals, by = c(ISSN = "issn")) %>%
   distinct()
 ```
 
-Crossref indexed 88.1767313 % of Web of Science journals.
+Crossref indexed 90.3495386 % of Web of Science journals.
 
 The following table shows the number of journals per publisher.
 
@@ -131,20 +129,20 @@ rp_df %>%
   mutate(prop = n /sum(n) * 100)
 ```
 
-    ## # A tibble: 1,166 x 3
+    ## # A tibble: 1,186 x 3
     ##    publisher                                     n  prop
     ##    <chr>                                     <int> <dbl>
-    ##  1 Elsevier BV                                1807 13.1 
-    ##  2 Springer Nature                            1782 12.9 
-    ##  3 <NA>                                       1627 11.8 
-    ##  4 Informa UK Limited                         1362  9.90
-    ##  5 Wiley                                      1277  9.28
-    ##  6 SAGE Publications                           652  4.74
-    ##  7 Oxford University Press (OUP)               319  2.32
-    ##  8 Cambridge University Press (CUP)            292  2.12
-    ##  9 Ovid Technologies (Wolters Kluwer Health)   210  1.53
-    ## 10 Walter de Gruyter GmbH                      199  1.45
-    ## # … with 1,156 more rows
+    ##  1 Elsevier BV                                1862 13.5 
+    ##  2 Springer Nature                            1813 13.2 
+    ##  3 Informa UK Limited                         1394 10.1 
+    ##  4 <NA>                                       1328  9.65
+    ##  5 Wiley                                      1292  9.39
+    ##  6 SAGE Publications                           661  4.80
+    ##  7 Oxford University Press (OUP)               328  2.38
+    ##  8 Cambridge University Press (CUP)            301  2.19
+    ##  9 Ovid Technologies (Wolters Kluwer Health)   213  1.55
+    ## 10 Walter de Gruyter GmbH                      201  1.46
+    ## # … with 1,176 more rows
 
 Next, the number and proportion of original articles and reviews
 published per publisher is presented:
@@ -157,20 +155,20 @@ rp_df %>%
   arrange(desc(prop))
 ```
 
-    ## # A tibble: 1,166 x 3
+    ## # A tibble: 1,186 x 3
     ##    publisher                                                      n  prop
     ##    <chr>                                                      <dbl> <dbl>
-    ##  1 Elsevier BV                                              1942425 23.8 
-    ##  2 Springer Nature                                          1134385 13.9 
-    ##  3 Wiley                                                     711824  8.73
-    ##  4 Informa UK Limited                                        411910  5.05
-    ##  5 <NA>                                                      395542  4.85
-    ##  6 American Chemical Society (ACS)                           216320  2.65
-    ##  7 SAGE Publications                                         190534  2.34
-    ##  8 Royal Society of Chemistry (RSC)                          189477  2.32
-    ##  9 Institute of Electrical and Electronics Engineers (IEEE)  178400  2.19
-    ## 10 Oxford University Press (OUP)                             176699  2.17
-    ## # … with 1,156 more rows
+    ##  1 Elsevier BV                                              1954416 24.0 
+    ##  2 Springer Nature                                          1137230 14.0 
+    ##  3 Wiley                                                     712835  8.74
+    ##  4 Informa UK Limited                                        415088  5.09
+    ##  5 <NA>                                                      346172  4.25
+    ##  6 American Chemical Society (ACS)                           219525  2.69
+    ##  7 SAGE Publications                                         192969  2.37
+    ##  8 Royal Society of Chemistry (RSC)                          189669  2.33
+    ##  9 Institute of Electrical and Electronics Engineers (IEEE)  179006  2.20
+    ## 10 Oxford University Press (OUP)                             177365  2.18
+    ## # … with 1,176 more rows
 
 ### 3\. Obtain open access status information
 

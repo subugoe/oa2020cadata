@@ -96,14 +96,12 @@ As a result, a [matching table between Crossref and the Web of Science journals]
 cr_journals <- readr::read_csv("../data/cr_wos.csv") %>%
   # merge springer nature brands
   mutate(publisher = ifelse(grepl("Springer", publisher, fixed = FALSE), "Springer Nature", publisher))
-rp_publisher <- readr::read_csv("../data/publisher_league_14_18.csv")
 issn_l <- readr::read_tsv("../data/20190818.ISSN-to-ISSN-L.txt") %>%
   # manual fix Journal - American Water Works 
   add_row(ISSN = "2164-4535", `ISSN-L` = "0003-150X")
 rp_df <- rp_publisher %>%
   left_join(issn_l, by = "ISSN") %>%
-  left_join(cr_journals, by = c(`ISSN-L`= "issn_l")) %>%
-  select(-issn) %>%
+  left_join(cr_journals, by = c(ISSN = "issn")) %>%
   distinct()
 ```
 
