@@ -138,8 +138,7 @@ issn_l <- readr::read_tsv("../data/20190818.ISSN-to-ISSN-L.txt") %>%
   add_row(ISSN = "2164-4535", `ISSN-L` = "0003-150X")
 rp_df <- rp_country %>%
   left_join(issn_l, by = "ISSN") %>%
-  left_join(cr_journals, by = c(`ISSN-L`= "issn_l")) %>%
-  select(-issn) %>%
+  left_join(cr_journals, by = c(ISSN = "issn")) %>%
   distinct()
 ```
 
@@ -210,7 +209,7 @@ tmp <- map(2014:2018, function(x) {
 )
 # names
 names(tmp) <- paste0("pubyear_", 2014:2018)
-write_xlsx(tmp, "../data/rp_14_18.xlsx")
+write_xlsx(tmp, "../data/rp_jn_14_18.xlsx")
 ```
 
 Data Schema:

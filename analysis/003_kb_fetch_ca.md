@@ -36,7 +36,7 @@ require(RJDBC)
 require(rJava)
 require(writexl)
 
-rmarkdown::render("kb_fetch_new.Rmd")
+rmarkdown::render("003_kb_fetch_ca.Rmd")
 ```
 
 ## Workflow
@@ -53,11 +53,6 @@ require(tidyverse)
 require(RJDBC)
 require(rJava)
 .jinit()
-```
-
-    ## [1] 0
-
-``` r
 jdbcDriver <-
   JDBC(driverClass = "oracle.jdbc.OracleDriver", classPath = "../inst/jdbc_driver/ojdbc8.jar")
 jdbcConnection <-
@@ -148,12 +143,11 @@ issn_l <- readr::read_tsv("../data/20190818.ISSN-to-ISSN-L.txt") %>%
   add_row(ISSN = "2164-4535", `ISSN-L` = "0003-150X")
 rp_df <- rp_country %>%
   left_join(issn_l, by = "ISSN") %>%
-  left_join(cr_journals, by = c(`ISSN-L`= "issn_l")) %>%
-  select(-issn) %>%
+  left_join(cr_journals, by = c(ISSN = "issn")) %>%
   distinct()
 ```
 
-Crossref indexed 88.3629479 % of Web of Science journals.
+Crossref indexed 90.5184969 % of Web of Science journals.
 
 The following table shows the number of journals per publisher.
 
@@ -164,20 +158,20 @@ rp_df %>%
   mutate(prop = n /sum(n))
 ```
 
-    ## # A tibble: 1,166 x 3
+    ## # A tibble: 1,186 x 3
     ##    publisher                                     n   prop
     ##    <chr>                                     <int>  <dbl>
-    ##  1 Elsevier BV                                1807 0.132 
-    ##  2 Springer Nature                            1782 0.130 
-    ##  3 <NA>                                       1598 0.116 
-    ##  4 Informa UK Limited                         1362 0.0992
-    ##  5 Wiley                                      1277 0.0930
-    ##  6 SAGE Publications                           652 0.0475
-    ##  7 Oxford University Press (OUP)               319 0.0232
-    ##  8 Cambridge University Press (CUP)            292 0.0213
-    ##  9 Ovid Technologies (Wolters Kluwer Health)   210 0.0153
-    ## 10 Walter de Gruyter GmbH                      199 0.0145
-    ## # … with 1,156 more rows
+    ##  1 Elsevier BV                                1862 0.136 
+    ##  2 Springer Nature                            1813 0.132 
+    ##  3 Informa UK Limited                         1393 0.101 
+    ##  4 <NA>                                       1302 0.0948
+    ##  5 Wiley                                      1292 0.0941
+    ##  6 SAGE Publications                           661 0.0481
+    ##  7 Oxford University Press (OUP)               328 0.0239
+    ##  8 Cambridge University Press (CUP)            301 0.0219
+    ##  9 Ovid Technologies (Wolters Kluwer Health)   213 0.0155
+    ## 10 Walter de Gruyter GmbH                      201 0.0146
+    ## # … with 1,176 more rows
 
 ### 3\. Obtain open access status information
 
@@ -247,7 +241,7 @@ tmp <- map(2014:2018, function(x) {
 )
 # names
 names(tmp) <- paste0("pubyear_", 2014:2018)
-write_xlsx(tmp, "../data/rp_14_18.xlsx")
+write_xlsx(tmp, "../data/rp_jn_14_18.xlsx")
 ```
 
 Data
