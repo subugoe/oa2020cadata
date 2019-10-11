@@ -1,7 +1,6 @@
 ---
-title: "Data Descriptor: Corresponding author journal publishing activities 2014 - 2018"
+title: "Data Descriptor: Corresponding author journal publishing activities 2014-2018"
 output: github_document
-author: "Najko Jahn"
 bibliography: pubs.bib
 csl: chicago.csl
 ---

@@ -1,7 +1,6 @@
-Data Descriptor: Corresponding author journal publishing activities 2014
-- 2018
+Data Descriptor: Corresponding author journal publishing activities
+2014-2018
 ================
-Najko Jahn
 
 ## Background & summary
 
