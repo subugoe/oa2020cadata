@@ -9,7 +9,11 @@
 
 ### Overview
 
-This repository is a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) providing a dataset about corresponding author country affiliations indexed in the Web of Science 2014 - 2018. A research compendium contains data, code, and text associated with it. The R Markdown files in the [`analysis/`](analysis/) directory provide details about the data analysis, particularly about how the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) was interfaced, and the [*Data Descriptive*](analysis/paper.md). The [`data/`](data/) directory contains all aggregated data. Because of the proprietary nature of the Web of Science, no raw data and no access to the in-house database can be shared. 
+This repository provides a dataset about corresponding author country affiliations indexed in the Web of Science 2014 - 2018 using the in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/). 
+
+To start with, read the [*Data Descriptor*](analysis/paper.md), an overview of the dataset and analytical work.
+
+This repository is organized as a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2). A research compendium contains data, code, and text associated with it. The R Markdown files in the [`analysis/`](analysis/) directory provide details about the data analysis, particularly about how the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) was interfaced, and the [*Data Descriptor*](analysis/paper.md). The [`data/`](data/) directory contains all aggregated data. Because of the proprietary nature of the Web of Science, no raw data and no access to the in-house database can be shared. 
 
 ### Analysis files
 
@@ -110,9 +114,9 @@ Source Code: MIT (Najko Jahn, 2019)
 
 ### Contributors
 
-- Design and conceptualization:
-- Data Analysis:
-- Writing and Review:
+- Design and Conceptualization: Colleen Campbell, Kai Geschuhn, Najko Jahn
+- Data Analysis: Najko Jahn
+- Writing and Review: Najko Jahn, Birgit Schmidt, Niels Taubert
 
 ### Contributing
 
