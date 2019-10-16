@@ -20,7 +20,7 @@ This repository is organized as a [research compendium](https://doi.org/10.7287/
 
 The [`analysis/`](analysis/) directory contains the following reports written in [R Markdown](https://rmarkdown.rstudio.com/):
 
-- [`paper.Rmd`](analysis/paper.Rmd) - The Data Descriptive including two use-cases. Link to the [rendered report](analysis/paper.md)
+- [`paper.Rmd`](analysis/paper.Rmd) - The Data descriptor including two use-cases. Link to the [rendered report](analysis/paper.md)
 
 Analytical steps for obtaining the data from the Web of Science in-house database maintained by the German Competence Center for Bibliometrics (WoS-KB), and data enriching were also provided as R Markdown reports:
 
@@ -28,6 +28,7 @@ Analytical steps for obtaining the data from the Web of Science in-house databas
 - [`002_kb_rp_coverage.Rmd`](analysis/002_kb_rp_coverage.Rmd) - Coverage analysis of reprint authors in the WoS-KB for the period 2014 - 2018. Link to the [rendered report](analysis/002_kb_rp_coverage.md)
 - [`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd) - Steps to obtain and compile the dataset about corresponding author country affiliations 2014 - 2018. Link to the [rendered report](analysis/003_kb_fetch_ca.md)
 - [`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd) - Steps to obtain and compile the dataset about the global publisher output 2014 - 2018. Link to the [rendered report](analysis/004_kb_fetch_publisher.md)
+- [`wos_cr_match.Rmd`](analysis/wos_cr_match.Rmd) - Obtain most frequent publisher and journal name by Web of Science indexed journal from Crossref. Executing this script will take approx. 2-3 hours.
 
 ### Data files
 
@@ -44,9 +45,9 @@ The [`data/`](data/) directory contains the resulting datasets stored as comma-s
 
 This repository follows the concept of a [research compendium](https://doi.org/10.7287/peerj.preprints.3192v2) that uses the R package structure to port data and code. 
 
-Because access to the data infrastructure of the German Competence Center for Bibliometrics (WoS-KB) is restricted, there are different levels of reproducibility. Everyone will be able to reproduce the analysis in the [data descriptive](analysis/paper.md), the main document of this research compendium written in R Markdown. Users with access to the WoS-KB data infrastructure will also be able to replicate the R code and SQL queries locally, or on the script server.
+Because access to the data infrastructure of the German Competence Center for Bibliometrics (WoS-KB) is restricted, there are different levels of reproducibility. Everyone will be able to reproduce the analysis in the [data descriptor](analysis/paper.md), the main document of this research compendium written in R Markdown. Users with access to the WoS-KB data infrastructure will also be able to replicate the R code and SQL queries locally, or on the script server.
 
-#### Data Descriptive
+#### Data descriptor
 
 Clone the GitHub repository with all data and code.
 
@@ -60,7 +61,7 @@ Open an R session in the directory of this package and install the R package dep
 devtools::install_deps(repos = list(CRAN = 'http://mran.revolutionanalytics.com/snapshot/2019-09-08/'))
 ```
 
-To replicate the data descriptive:
+To replicate the data descriptor:
 
 ```r
 rmarkdown::render("analysis/paper.Rmd")
@@ -68,7 +69,7 @@ rmarkdown::render("analysis/paper.Rmd")
 
 #### Binder 
 
-Using the [holepunch-package](https://github.com/karthik/holepunch) the project was made Binder ready. Binder allows you to execute the data descriptive in the cloud in your web browser.
+Using the [holepunch-package](https://github.com/karthik/holepunch) the project was made Binder ready. Binder allows you to execute the data descriptor in the cloud in your web browser.
 
 [![Launch Rstudio Binder](http://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/subugoe/oa2020cadata/master?urlpath=rstudio)
 
@@ -109,7 +110,7 @@ ISSN-Matching of Gold OA Journals (ISSN-GOLD-OA) 3.0 and Country Geocodes obtain
 
 Web of Science data © 2019 Clarivate Analytics. All rights reserved.
 
-The documentation and data descriptive including the figures are made available under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The documentation and data descriptor including the figures are made available under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 Source Code: MIT (Najko Jahn, 2019)
 
