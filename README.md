@@ -35,9 +35,9 @@ Analytical steps for obtaining the data from the Web of Science in-house databas
 The [`data/`](data/) directory contains the resulting datasets stored as comma-separated value files.
 
 
-- [`rp_jn_14_18.csv`](data/rp_jn_14_18.csv) - Corresponding author country affiliations per publisher, journal and open access publishing model 2014 - 2018
+- [`rp_publisher_14_18.csv`](data/rp_publisher_14_18.csv) - Corresponding author country affiliations per publisher, journal and open access publishing model 2014 - 2018
 - [`journal_publisher_14_18.csv`](data/journal_publisher_14_18.csv) - Global publisher and journal output 2014 - 2018 
-- [`cr_wos.csv`](data/cr_wos.csv) - Matching table publisher and journal infos Crossref / Web of Science
+- [`cr_wos.csv`](data/cr_wos.csv) - Matching table publisher and journal infos between  Crossref and the Web of Science
 - [`20190818.ISSN-to-ISSN-L.txt`](data/20190818.ISSN-to-ISSN-L.txt) - ISSN matching table from <https://www.issn.org/understanding-the-issn/assignment-rules/the-issn-l-for-publications-on-multiple-media/>
 - [`geocodes.csv`](data/geocodes.csv) - Country geocodes obtained from <https://developers.google.com/public-data/docs/canonical/countries_csv>
 
@@ -98,17 +98,14 @@ Using a docker container with all source code and data needed to reproduce this 
 
 ### License
 
-The compiled datasets are released into the public domain.
-
-Anyone is free to copy, modify, publish, use, compile, sell, or distribute these materials in any form, for any purpose, commercial or non-commercial, and by any means.
 
 Re-used data terms:
+
+This work uses Web of Science data by Clarivate Analytics provided by the German Competence Center for Bibliometrics for research purposes. 
 
 Crossref asserts no claims of ownership to individual items of bibliographic metadata and associated Digital Object Identifiers (DOIs) acquired through the use of the Crossref Free Services. Individual items of bibliographic metadata and associated DOIs may be cached and incorporated into the user's content and systems.
 
 ISSN-Matching of Gold OA Journals (ISSN-GOLD-OA) 3.0 and Country Geocodes obtained from Google are made available under CC-BY.
-
-Web of Science data © 2019 Clarivate Analytics. All rights reserved.
 
 The documentation and data descriptor including the figures are made available under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
