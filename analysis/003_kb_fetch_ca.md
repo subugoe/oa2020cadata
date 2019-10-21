@@ -22,8 +22,8 @@ be investigated:
 
 This dataset will be extended with:
 
-  - Publisher and journal titles from Crossref
-  - Journal open access status provided by the Bielefeld GOLD OA list
+  - Publisher information from Crossref
+  - Journal open access status provided by the ISSN GOLD OA list
 
 In this document, every step needed to create the dataset is described.
 This document is written in [RMarkdown](https://rmarkdown.rstudio.com/).
@@ -212,7 +212,7 @@ rp_df_oa %>%
     ## 1 FALSE      11580 0.854
     ## 2 TRUE        1981 0.146
 
-### 4\. Data coding and dump
+### 4\. Data coding and dump journal-level
 
 `CSV`-based dump
 
@@ -257,3 +257,27 @@ Schema:
 | `publisher`        | Most frequently used publisher name in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref                                      | Crossref                                                                                                                                                   |
 | `oa_journal`       | Is the journal publishing all articles open access without delay (full open access)?                                                                                             | Bielefeld GOLD OA List V3                                                                                                                                  |
 | `issn_l`           | Linking ISSN, a journal id that groups the different media of the same serial publication, e.g. ISSN for print with electronic issn.                                             | CIEPS                                                                                                                                                      |
+
+### 5\. Publisher-level data
+
+``` r
+rp_jn <- readr::read_csv("../data/rp_jn_14_18.csv") %>%
+  group_by(country_code, publication_year, publisher, oa_journal) %>%
+  summarise(n_publications = sum(articles, na.rm = TRUE),
+            n_journals = n_distinct(issn_l))
+# export to csv and excel
+readr::write_csv(rp_jn, "../data/rp_publisher_14_18.csv")
+writexl::write_xlsx(rp_jn, "../data/rp_publisher_14_18.xlsx")
+```
+
+Data
+Schema:
+
+| Variable           | Description                                                                                                                                 | Source                                                                        |
+| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------- |
+| `country_code`     | Country of affiliation corresponding author, represented as ISO 3 code                                                                      | KB Web of Science: `wos_b_2019.d_items_authors_institutions.inst_countrycode` |
+| `publication_year` | Year of publication, obtained from KB Web of Science                                                                                        | KB Web of Science: `wos_b_2019.items.pubyear`                                 |
+| `publisher`        | Most frequently used publisher name in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref | Crossref                                                                      |
+| `oa_journal`       | Is the journal publishing all articles open access without delay (full open access)?                                                        | ISSN GOLD OA List V3                                                          |
+| `n_publications`   | Number of original articles and reviews published                                                                                           | Aggregate data                                                                |
+| `n_journals`       | Number of distinct journals with corresponding publication output                                                                           | Aggregate data                                                                |

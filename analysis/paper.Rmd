@@ -10,6 +10,8 @@ library(tidyverse)
 library(janitor)
 library(scatterpie)
 library(knitr)
+library(scales)
+library(countrycode)
 knitr::opts_chunk$set(
   comment = "#>",
   collapse = TRUE,
@@ -43,9 +45,9 @@ Only a few openly available datasets focusing on the scholarly publishing indust
 
 There have also been analytical applications for such datasets. Major bibliometric databases including the Web of Science, Scopus and Dimension have started to integrate open access status information. In these databases, Unpaywall data is often used to identify openly available full-texts at the article-level, while the Directory of Open Access Journals provides information about if a journal is fully open access. In its most recent edition, the Leiden Ranking presents open access indicators at the level of universities [@leiden]. In addition to university-specific data, the German Open Access Monitor provides breakdowns by publisher and journal and includes publications from non-university research institutions based in Germany [@oa_monitor].
 
-Here, we build an open dataset on the global productivity of corresponding authors. Drawing on Palzenberger's (2015) previous work, we not only created an updated dataset about the number and proportion of scholarly articles per country of affiliation from corresponding authors. The dataset also allows for a breakdown by journal, including information whether it was operated as a subscription or fully open access journal, and by publishers. We constructed the dataset using the quality-assured Web of Science in-house database from the German Competence Center for Bibliometrics. We enriched the data with publisher information from Crossref, a large DOI registration agency for scholarly work, and with open access journal information provided by the ISSN-GOLD-OA list, a dataset that merges open access journal information from the DOAJ, OpenAPC, PubMed and ROAD [@issn]. 
+Here, we build an open dataset on the global productivity of corresponding authors. Drawing on Palzenberger's (2015) previous work, we not only created an updated dataset about the number and proportion of scholarly articles per country of affiliation from corresponding authors. The dataset also allows for a breakdown by journal, including information whether it was operated as a subscription or fully open access journal, and by publishers. We constructed the dataset using the quality-assured Web of Science in-house database from the German Competence Center for Bibliometrics. We enriched the data with publisher information from Crossref, a large DOI registration agency for scholarly work, and with open access journal information provided by the ISSN-GOLD-OA list, a dataset that merges open access journal information from the DOAJ, OpenAPC, PubMed and ROAD [@issn].
 
-The data does not only provide background information for negotiations in the context of transformative agreements, but can also be used in the quantitative study of the scholarly publishing industry and the open access uptake across countries. For instance, national transformative agreements with large publishers will increase opportunities to publish open access. The existence of such agreements will therefore likely have an impact on the open access share of a country with such agreements. To demonstrate the dataset's significance, we will present two new findings using the dataset: a global map of publishers' market shares, and an analysis of country of affiliation by publisher. The source code used for compiling the dataset is shared along with the resulting datasets. 
+The data does not only provide background information for negotiations in the context of transformative agreements, but can also be used in the quantitative study of the scholarly publishing industry and the open access uptake across countries. For instance, national transformative agreements with large publishers will increase opportunities to publish open access. The existence of such agreements will therefore likely have an impact on the open access share of a country with such agreements. To demonstrate the dataset's significance, we will present two new findings using the dataset: a global map of publishers' market shares, and an analysis of country of affiliation by publisher. The source code used for compiling the dataset is shared along with the resulting datasets.
 
 ## Methods
 
@@ -55,12 +57,12 @@ Following @Palzenberger_2015, data were retrieved from the in-house Web of Scien
 - Article types Original Articles and Reviews
 - Countries of affiliation
 - ISSN
-- Publication years 2014 - 2018 
+- Publication years 2014 - 2018
 - Author roles, interpreting the role "reprint author" as corresponding authorship.
 
-Like @Palzenberger_2015, the above-listed selection reflects data needs in the context of open access negotiations between library consortia and publishers. The restriction to the article types original article and review is in accordance with most open access contracts where other types of journal content like letters or meeting abstracts are not considered (see for instance @Sander_2019). 
+Like @Palzenberger_2015, the above-listed selection reflects data needs in the context of open access negotiations between library consortia and publishers. The restriction to the article types original article and review is in accordance with most open access contracts where other types of journal content like letters or meeting abstracts are not considered (see for instance @Sander_2019).
 
-To allocate open access costs to institutions, @Schimmer_2015 proposed to use affiliations from corresponding authors, presuming that corresponding author affiliations can be counted straight. Under this counting method, only one institution or one country receives full credit for a publication [@Huang_2011]. However, there have been some concerns with using corresponding authorship’s data from bibliometric databases for cost analysis recently. @Gumpenberger_2018 noted two potential issues: multiple corresponding author affiliations and multiple corresponding authors per article. 
+To allocate open access costs to institutions, @Schimmer_2015 proposed to use affiliations from corresponding authors, presuming that corresponding author affiliations can be counted straight. Under this counting method, only one institution or one country receives full credit for a publication [@Huang_2011]. However, there have been some concerns with using corresponding authorship’s data from bibliometric databases for cost analysis recently. @Gumpenberger_2018 noted two potential issues: multiple corresponding author affiliations and multiple corresponding authors per article.
 
 Indeed, the Web of Science has begun to systematically keep track of more than one corresponding author recently: <!-- maybe stress that before 2016 only one unique corresponding author was allowed?--> We found that the Web of Science did record more than one corresponding author for 6.2% of indexed articles published between 2014 - 2018 (see Figure 1). Moreover, a 5% of corresponding authors author was internationally co-located (see Figure 2). We therefore<!--delete therefore?--> decided to use whole counting where every original article or review was counted once per country of affiliation of the corresponding author(s).
 
@@ -70,16 +72,16 @@ Indeed, the Web of Science has begun to systematically keep track of more than o
 
 After obtaining aggregated article counts at the level of countries and journals from the Web of Science, Crossref’s REST API was queried using the rcrossref package [@rcrossref] to retrieve publisher <!--'publisher names' or 'publishers'--> and journal titles. To control for developments of the publishing market resulting in name changes of publishers or journal titles over time, only the most frequent field name was used from the API facet counts. <!--most frequent name amongst all considered articles or in the whole of crossref? for this specific journal or always the same name over all journals?--> Drawing on ISSN-L, a journal identifier that links between different media versions of a journal, ISSN variants were obtained to improve the retrieval. Next, the open access status per journal was identified and added to the dataset using the ISSN-Gold-OA 3.0 list [@issn]. Again, ISSN-L were used for the matching procedure.
 
-## Data and Code availability 
+## Data and Code availability
 
-The underlying source code in R and SQL for both testing the retrieval and compiling the datasets are openly shared as executable reports, making our data work more reproducible and transparent. The data analytics work, which was organized as research compendium [@Marwick_2017] using the holepunch R package [@holepunch], is accessible at <https://github.com/subugoe/oa2020cadata>. 
+The underlying source code in R and SQL for both testing the retrieval and compiling the datasets are openly shared as executable reports, making our data work more reproducible and transparent. The data analytics work, which was organized as research compendium [@Marwick_2017] using the holepunch R package [@holepunch], is accessible at <https://github.com/subugoe/oa2020cadata>.
 
 More specifically, the following database retrieval steps were tracked using R Markdown, a reproducible authoring framework supporting various programming languages including R and SQL, and are accessible in the `analysis` folder of the research compendium:
 
-1. Initial exploration about how corresponding authorships are represented in the WoS-KB ([`001_kb_rp_pretest.Rmd`](analysis/001_kb_rp_pretest.Rmd)) 
-2. Coverage analysis of reprint authors in the WoS-KB for the period 2014 - 2018 ([`002_kb_rp_coverage.Rmd`](analysis/002_kb_rp_coverage.Rmd)). 
-3. Steps to obtain and compile the dataset about corresponding author country affiliations 2014 - 2018([`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd)) 
-4. Steps to obtain and compile the dataset about the global publisher output 2014 - 2018 ([`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd)). 
+1. Initial exploration about how corresponding authorships are represented in the WoS-KB ([`001_kb_rp_pretest.Rmd`](analysis/001_kb_rp_pretest.Rmd))
+2. Coverage analysis of reprint authors in the WoS-KB for the period 2014 - 2018 ([`002_kb_rp_coverage.Rmd`](analysis/002_kb_rp_coverage.Rmd)).
+3. Steps to obtain and compile the dataset about corresponding author country affiliations 2014 - 2018 ([`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd))
+4. Steps to obtain and compile the dataset about the global publisher output 2014 - 2018 ([`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd)).
 
 The research compendium contains the rendered reports as well. Furthermore, this source code repository includes comprehensive reproducibility guidance for users with access to the in-house data infrastructure provided by the Competence Centre for Bibliometrics for German Science.
 
@@ -88,9 +90,9 @@ The research compendium contains the rendered reports as well. Furthermore, this
 Overall, our dataset consists of the following two separate tables:
 
 - `journal_publisher_14_18`: Global journal and publisher data 2014-18
-- `rp_jn_14_18`: Corresponding author country affiliations per publisher and journal 2014-18
+- `rp_publisher_14_18.csv`: Corresponding author country affiliations per publisher and journal 2014-18
 
-They are provided as comma-separated values (csv) files and Excel spreadsheets (xlsx).  
+They are provided as comma-separated values (csv) files and Excel spreadsheets (xlsx).
 
 The data are openly available in the `data/` of the research compendium hosted on GitHub <https://github.com/subugoe/oa2020cadata>.
 
@@ -120,33 +122,29 @@ Data Schema `journal_publisher_14_18`: <!--mention the abbreviation 'KB Web of S
 ### Corresponding author data
 
 ```{r}
-rp_df <- readr::read_csv("../data/rp_jn_14_18.csv")
+rp_df <- readr::read_csv("../data/rp_publisher_14_18.csv")
 ```
 
-The file named `rp_jn_14_18` provides a breakdown of journal information aggregated by countries of affiliation. Only corresponding authorships, indicated by the role "reprint author" in the Web of Science database, were taken into consideration. The following table describes the variables in detail. Overall, 99 % of records representing original articles and reviews in the period 2014 - 2018 had affiliation information for corresponding authors at the country-level.
+The dataset named `rp_publisher_14_18` provides a breakdown of journal information aggregated by  countries of affiliation. Only corresponding authorships, indicated by the role "reprint author" in the Web of Science database, were taken into consideration. The following table  describes the variables in detail. Overall, 99 % of records representing original articles and reviews in the period 2014 - 2018 had affiliation information for corresponding authors at the country-level.
 
+Data Schema:
 
-Data
-Schema:
-
-| Variable           | Description                                                                                                                                                                      | Source                                                                                                                                                     |
-| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `issn_wos`         | ISSN, a standardized journal id.                                                                                                                                                 | KB Web of Science: `wos_b_2019.issues.issn`                                                                                                                |
-| `country_code`     | Country of affiliation corresponding author, represented as ISO 3 code                                                                                                           | KB Web of Science: `wos_b_2019.d_items_authors_institutions.inst_countrycode`                                                                              |
-| `publication_year` | Year of publication, obtained from KB Web of Science                                                                                                                             | KB Web of Science: `wos_b_2019.items.pubyear`                                                                                                              |
-| `articles`         | Number of original articles and reviews published. Whole counting where internationally co-located corresponding authorships were assigned to each contributing country equally. | KB Web of Science: Grouped counts over `wos_b_2019.issues.issn`, `wos_b_2019.d_items_authors_institutions.inst_countrycode` and `wos_b_2019.items.pubyear` |
-| `journal_title`    | Most frequently used journal title in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref                                       | Crossref                                                                                                                                                   |
-| `publisher`        | Most frequently used publisher name in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref                                      | Crossref                                                                                                                                                   |
-| `oa_journal`       | Is the journal publishing all articles open access without delay (full open access)?                                                                                             | ISSN-GOLD_OA List 3.0                                                                                                                              |
-| `issn_l`           | Linking ISSN, a journal id that groups different media of the same serial publication, e.g. ISSN for print with electronic ISSN.                                             | CIEPS                                                                                                                                                      |
+|Variable           |Description                                                                                                                                 |Source                                                                        |
+|:------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------|
+|`country_code`     |Country of affiliation corresponding author, represented as ISO 3 code                                                                      |KB Web of Science: `wos_b_2019.d_items_authors_institutions.inst_countrycode` |
+|`publication_year` |Year of publication, obtained from KB Web of Science                                                                                        |KB Web of Science: `wos_b_2019.items.pubyear`                                 |
+|`publisher`        |Most frequently used publisher name in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref |Crossref                                                                      |
+|`oa_journal`       |Is the journal publishing all articles open access without delay (full open access)?                                                        |ISSN GOLD OA List V3                                                          |
+|`n_publications`   |Number of original articles and reviews published                                                                                           |Aggregate data                                                                |
+|`n_journals`       |Number of distinct journals with corresponding publication output                                                                           |Aggregate data
 
 <!--### Corresponding author co-authorship network -->
 
 ## Use-cases
 
 ### Global publisher market share
- 
-Based on the dataset `journal_publisher_14_18` the global market share of publishing houses in terms of articles and reviews indexed in the Web of Science can be analyzed for the period 2014-18. The following table  shows the overall market share for the ten largest publishers. The following figure presents a breakdown by journal business model, differentiating between subscription journals and fully open access journals. 
+
+Based on the dataset `journal_publisher_14_18` the global market share of publishing houses in terms of articles and reviews indexed in the Web of Science can be analyzed for the period 2014-18. The following table  shows the overall market share for the ten largest publishers. The following figure presents a breakdown by journal business model, differentiating between subscription journals and fully open access journals.
 
 ```{r, results='asis'}
 my_df <- readr::read_csv("../data/journal_publisher_14_18.csv")
@@ -223,7 +221,7 @@ p_bar <-
     x = "",
     y = "",
     subtitle = "Original Articles and Reviews indexed in the Web of Science\n\n",
-    caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science. 
+    caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science.
     Publisher names were disambiguated using Crossref metadata. OA status obtained from the Bielefeld GOLD OA list.
     Funding: Federal Ministry of Education and Research of Germany (BMBF), Project OAUNI (01PU17023A)"
   ) +
@@ -250,12 +248,11 @@ ggsave(
 
 Our data confirms that the global publishing landscape is dominated by a few large publishers. In total, ten publishers accounted for around two-thirds of articles published between 2014 - 2018. The Big Three, Elsevier, Springer Nature and Wiley, secured a market share of 46 %. However, further analysis suggests large differences between subscription and fully open access journals: The market for fully open access journals seems to be less dominated by major publishing houses. A notable exception is Springer Nature with its large fully open access portfolio including BioMed Central and the large mega-journals Scientific Reports and Nature Communications.
 
-### Global Map of Journal Publishing 
+### Global Map of Journal Publishing
 
-Using `rp_14_18` the publisher market shares can be further broken down by country affiliation from corresponding authors. The following figure presents a global map of scholarly journal publishing represented in the Web of Science. Publications from institutions based in the European Union were summarized as "EU28". Together, all EU 28 member states constituted the largest market for journal publishing between 2014-18.
+Using `rp_publisher_14_18.csv` the publisher market shares can be further broken down by country affiliation from corresponding authors. The following figure presents a global map of scholarly journal publishing represented in the Web of Science. Publications from institutions based in the European Union were summarized as "EU28". Together, all EU 28 member states constituted the largest market for journal publishing between 2014-18.
 
 ```{r}
-my_df <- readr::read_csv("../data/rp_jn_14_18.csv")
 #'  transform to eu
 eu <-
   c(
@@ -288,14 +285,14 @@ eu <-
     "SVN",
     "SWE"
   )
-my_df %>%
+rp_df %>%
   mutate(eu = case_when(country_code %in% eu ~ "EU28")) %>%
   mutate(countries = ifelse(eu %in% "EU28", "EU28", country_code)) -> df_to_plot
 #' top 5 publisher closed
-my_df %>%
+rp_df %>%
  # filter(oa_journal == FALSE) %>%
   group_by(publisher) %>%
-  summarise(n = sum(articles)) %>%
+  summarise(n = sum(n_publications)) %>%
   arrange(desc(n)) %>%
   head(11) %>%
   .$publisher -> top_6
@@ -304,7 +301,7 @@ df_to_plot %>%
   mutate(fct_publisher = ifelse(publisher %in% top_6, publisher, "Others")) %>%
   mutate(fct_publisher = ifelse(is.na(fct_publisher), "Others", fct_publisher)) %>%
   group_by(fct_publisher, countries) %>%
-  summarize(n = sum(articles)) %>%
+  summarize(n = sum(n_publications)) %>%
   mutate(prop = n / sum(n)) %>%
   ungroup() %>%
   mutate(fct_publisher = factor(fct_publisher, levels = c(top_6[!is.na(top_6)], "Others"))) %>%
@@ -312,7 +309,7 @@ df_to_plot %>%
 #' add country lat lon
 #' eu28 frankfurt main is the center
 eu_df <-
-  data_frame(
+  tibble(
     latitude = 50.6393264,
     longitude = 8.40556572,
     name = "EU28",
@@ -412,20 +409,20 @@ ggsave("figure/map.pdf",
 
 ![Figure 4](figure/map.png)
 
-The following figure shows the country share per publisher in terms of original articles and reviews published in subscription journals using corresponding author affiliations. The flipped x-axis shows the top 10 countries of affiliations in terms of articles published, while the y-axis depicts the percentage per publisher. The figure indicates, which countries were particularly important for a publisher. Furthermore, it suggests large variations across publishers. Take for instance the publisher Royal Society of Chemistry. Around every third article published in a subscription journal was submitted from an author based in China, while the overall share of China-based authors was significantly lower with `r rp_df %>% filter(oa_journal == FALSE) %>% group_by(country_code) %>% summarise(n = sum(articles)) %>% arrange(desc(n)) %>% mutate(prop = n /sum(n)) %>% filter(country_code == "CHN") %>% .$prop * 100` %.
+The following figure shows the country share per publisher in terms of original articles and reviews published in subscription journals using corresponding author affiliations. The flipped x-axis shows the top 10 countries of affiliations in terms of articles published, while the y-axis depicts the percentage per publisher. The figure indicates, which countries were particularly important for a publisher. Furthermore, it suggests large variations across publishers. Take for instance the publisher Royal Society of Chemistry. Around every third article published in a subscription journal was submitted from an author based in China, while the overall share of China-based authors was significantly lower with `r rp_df %>% filter(oa_journal == FALSE) %>% group_by(country_code) %>% summarise(n = sum(n_publications)) %>% arrange(desc(n)) %>% mutate(prop = n /sum(n)) %>% filter(country_code == "CHN") %>% .$prop * 100` %.
 
 ```{r}
 top_10_publisher <- rp_df %>%
   filter(oa_journal == FALSE) %>%
   group_by(publisher) %>%
-  summarise(n = sum(articles)) %>%
+  summarise(n = sum(n_publications)) %>%
   arrange(desc(n)) %>%
   head(11) %>%
   .$publisher
 top_10_countries <- rp_df %>%
   filter(oa_journal == FALSE) %>%
   group_by(country_code) %>%
-  summarise(n = sum(articles)) %>%
+  summarise(n = sum(n_publications)) %>%
   arrange(desc(n)) %>%
   head(10) %>%
   .$country_code
@@ -436,7 +433,7 @@ plot_df <- rp_df %>%
   mutate(fct_countrcode = ifelse(country_code %in% top_10_countries, country_code, "Others")) %>%
   mutate(fct_countrcode = factor(fct_countrcode, levels = c(top_10_countries, "Others"))) %>%
   group_by(fct_publisher, fct_countrcode) %>%
-  summarize(n = sum(articles)) %>%
+  summarize(n = sum(n_publications)) %>%
   mutate(prop = n / sum(n)) %>%
   ungroup()
 #' plot
@@ -490,8 +487,12 @@ Moreover, as is the case with any other bibliometric database, the data structur
 
 The ISSN GOLD-OA list <!--add version ?--> [@issn] was used to determine fully open access journals. However, it does not contain information when a subscription-based journal became fully open access. The figures should therefore be interpreted as numbers of articles available in current fully open access journals, instead of published in a fully open access journal at the time of publication. Open access article counts are therefore upper estimates. <!-- Is it really upper estimates? What about reverse flip?-->
 
-In the end, we present a novel bibliometric dataset representing the journal publishing market with a particular focus on open access. Although access to the underlying data infrastructure is restricted, we decided to openly share the aggregated dataset as part of a research compendium to demonstrate <!-- ensure instead of demonstrate?--> the technical reproducibility of this work. 
+In the end, we present a novel bibliometric dataset representing the journal publishing market with a particular focus on open access. Although access to the underlying data infrastructure is restricted, we decided to openly share the aggregated dataset as part of a research compendium to demonstrate <!-- ensure instead of demonstrate?--> the technical reproducibility of this work.
 
 ## Acknowledgment
+
+This work uses Web of Science data by Clarivate Analytics provided by the German Competence Center for Bibliometrics for research purposes.
+
+This work is supported by the Federal Ministry of Education and Research of Germany (BMBF) in the framework Quantitative Research on the Science Sector (Project: "OAUNI Entwicklung und Einflussfaktoren des Open-Access-Publizierens an Universitäten in Deutschland", Förderkennzeichen: 01PU17023A).
 
 ## References

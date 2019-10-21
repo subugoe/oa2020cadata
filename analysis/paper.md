@@ -155,8 +155,8 @@ programming languages including R and SQL, and are accessible in the
     2014 - 2018
     ([`002_kb_rp_coverage.Rmd`](analysis/002_kb_rp_coverage.Rmd)).
 3.  Steps to obtain and compile the dataset about corresponding author
-    country affiliations 2014 -
-    2018([`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd))
+    country affiliations 2014 - 2018
+    ([`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd))
 4.  Steps to obtain and compile the dataset about the global publisher
     output 2014 - 2018
     ([`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd)).
@@ -172,8 +172,8 @@ German Science.
 Overall, our dataset consists of the following two separate tables:
 
   - `journal_publisher_14_18`: Global journal and publisher data 2014-18
-  - `rp_jn_14_18.csv`: Corresponding author country affiliations per
-    publisher and journal 2014-18
+  - `rp_publisher_14_18.csv`: Corresponding author country affiliations
+    per publisher and journal 2014-18
 
 They are provided as comma-separated values (csv) files and Excel
 spreadsheets.
@@ -210,27 +210,25 @@ Data Schema
 
 ### Corresponding author data
 
-The file named `rp_jn_14_18` provides a breakdown of journal information
-aggregated by countries of affiliation. Only corresponding authorships,
-indicated by the role “reprint author” in the Web of Science database,
-were taken into consideration. The following table describes the
-variables in detail. Overall, 99 % of records representing original
-articles and reviews in the period 2014 - 2018 had affiliation
+The dataset named `rp_publisher_14_18` provides a breakdown of journal
+information aggregated by countries of affiliation. Only corresponding
+authorships, indicated by the role “reprint author” in the Web of
+Science database, were taken into consideration. The following table
+describes the variables in detail. Overall, 99 % of records representing
+original articles and reviews in the period 2014 - 2018 had affiliation
 information for corresponding authors at the country-level.
 
 Data
 Schema:
 
-| Variable           | Description                                                                                                                                                                      | Source                                                                                                                                                     |
-| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `issn_wos`         | ISSN, a standardized journal id.                                                                                                                                                 | KB Web of Science: `wos_b_2019.issues.issn`                                                                                                                |
-| `country_code`     | Country of affiliation corresponding author, represented as ISO 3 code                                                                                                           | KB Web of Science: `wos_b_2019.d_items_authors_institutions.inst_countrycode`                                                                              |
-| `publication_year` | Year of publication, obtained from KB Web of Science                                                                                                                             | KB Web of Science: `wos_b_2019.items.pubyear`                                                                                                              |
-| `articles`         | Number of original articles and reviews published. Whole counting where internationally co-located corresponding authorships were assigned to each contributing country equally. | KB Web of Science: Grouped counts over `wos_b_2019.issues.issn`, `wos_b_2019.d_items_authors_institutions.inst_countrycode` and `wos_b_2019.items.pubyear` |
-| `journal_title`    | Most frequently used journal title in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref                                       | Crossref                                                                                                                                                   |
-| `publisher`        | Most frequently used publisher name in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref                                      | Crossref                                                                                                                                                   |
-| `oa_journal`       | Is the journal publishing all articles open access without delay (full open access)?                                                                                             | ISSN-GOLD\_OA List 3.0                                                                                                                                     |
-| `issn_l`           | Linking ISSN, a journal id that groups the different media of the same serial publication, e.g. ISSN for print with electronic issn.                                             | CIEPS                                                                                                                                                      |
+| Variable           | Description                                                                                                                                 | Source                                                                        |
+| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------- |
+| `country_code`     | Country of affiliation corresponding author, represented as ISO 3 code                                                                      | KB Web of Science: `wos_b_2019.d_items_authors_institutions.inst_countrycode` |
+| `publication_year` | Year of publication, obtained from KB Web of Science                                                                                        | KB Web of Science: `wos_b_2019.items.pubyear`                                 |
+| `publisher`        | Most frequently used publisher name in terms of articles published between 2014 - 2018. If missing, the journal was not indexed in Crossref | Crossref                                                                      |
+| `oa_journal`       | Is the journal publishing all articles open access without delay (full open access)?                                                        | ISSN GOLD OA List V3                                                          |
+| `n_publications`   | Number of original articles and reviews published                                                                                           | Aggregate data                                                                |
+| `n_journals`       | Number of distinct journals with corresponding publication output                                                                           | Aggregate data                                                                |
 
 <!--### Corresponding author co-authorship network -->
 
@@ -279,12 +277,13 @@ Scientific Reports and Nature Communications.
 
 ### Global Map of Journal Publishing
 
-Using `rp_14_18` the publisher market shares can be further broken down
-by country affiliation from corresponding authors. The following figure
-presents a global map of scholarly journal publishing represented in the
-Web of Science. Publications from institutions based in the European
-Union were summarized as “EU28”. Together, all EU 28 member states
-constituted the largest market for journal publishing between 2014-18.
+Using `rp_publisher_14_18.csv` the publisher market shares can be
+further broken down by country affiliation from corresponding authors.
+The following figure presents a global map of scholarly journal
+publishing represented in the Web of Science. Publications from
+institutions based in the European Union were summarized as “EU28”.
+Together, all EU 28 member states constituted the largest market for
+journal publishing between 2014-18.
 
 ![Figure 4](figure/map.png)
 
@@ -335,6 +334,15 @@ decided to openly share the aggregated dataset as part of a research
 compendium to demonstrate the technical reproducibility of this work.
 
 ## Acknowledgment
+
+This work uses Web of Science data by Clarivate Analytics provided by
+the German Competence Center for Bibliometrics for research purposes.
+
+This work is supported by the Federal Ministry of Education and Research
+of Germany (BMBF) in the framework Quantitative Research on the Science
+Sector (Project: “OAUNI Entwicklung und Einflussfaktoren des
+Open-Access-Publizierens an Universitäten in Deutschland”,
+Förderkennzeichen: 01PU17023A).
 
 ## References
 
