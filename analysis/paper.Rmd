@@ -448,7 +448,7 @@ ggplot(plot_df, aes(forcats::fct_rev(fct_countrcode), prop, fill = prop)) +
   ) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 5L))  +
   labs(
-    title = "Who did publish in subscription-based journals from major publishers between 2014 - 2018?",
+    title = "Who published in subscription-based journals from major publishers between 2014 - 2018?",
     x = "Country of Affiliation (Top 10)",
     y = "Share of Original Articles and Reviews per Publisher",
     caption = "Data Sources:  Web of Science in-house database Competence Centre for Bibliometrics for German Science.
