@@ -125,7 +125,7 @@ rp_articles_total %>%
 
 *Retrieval considerations*
 
-[An earlier exploration](kb_rp_exploration.md) studying how affiliations from reprint authors are represented in the WOS-KB revealed that only one affiliation is tagged with `RP in the table `wos_b_2019.items_author_institutions` per author. To obtain all affiliations per reprint author, the following retrieval strategy can be used:
+[An earlier exploration](kb_rp_exploration.md)<!--link ist tot!--> studying how affiliations from reprint authors are represented in the WOS-KB revealed that only one affiliation is tagged with `RP in the table `wos_b_2019.items_author_institutions` per author. To obtain all affiliations per reprint author, the following retrieval strategy can be used:
 
 1. Get all authors tagged as RP per item
 2. Obtain all institutional addresses per rp_author-item combination including countrycode
