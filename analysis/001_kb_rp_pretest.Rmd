@@ -43,7 +43,9 @@ The aim of this work is to better understand how countries of affiliation from c
 3. Corresponding authors work in different countries
 
 
-<!--  why is issue of ex. 1 (multiple affiliations with differing author roles) not mentioned here?
+<!--  why is issue of ex. 1 (multiple affiliations with differing author roles) not mentioned here? 
+
+because I was not aware of this issue before. Let's wait and see how the table will be changed after the KB realised this data consistency issue.
 
 Maybe add something like
 
