@@ -9,7 +9,7 @@ Country information about corresponding authors play a crucial role in
 open access funding (Schimmer, Geschuhn, and Vogler 2015). The Web of
 Science contains data about this author role including affiliations,
 making it a valuable source to determine the productivity of
-corresponding authors per country ad journal.
+corresponding authors per country and journal.
 
 The aim of this work is to better understand how countries of
 affiliation from corresponding authors are represented in the WoS-KB,
@@ -22,12 +22,24 @@ corresponding author addresses only.
 
 1.  A corresponding author lists at least two different countries
 2.  More than one corresponding author is listed
-3.  Corresponding authors work in different countries
+3.  Corresponding authors work in different
+countries
+
+<!--  why is issue of ex. 1 (multiple affiliations with differing author roles) not mentioned here? 
+
+because I was not aware of this issue before. Let's wait and see how the table will be changed after the KB realised this data consistency issue.
+
+Maybe add something like
+
+4. Multiple country affiliations of the same author are listed with differing author roles
+
+The first three issues are of a more conceptual nature, all leading to a situation where one article is associated with multiple countries of affiliation. One has to decide upon a way of handling them which has to be considered at the time of interpretation of the results. Two options for the mentioned issues are whole counting or fractional counting. For whole counting, each article is counted fully for any country of affiliation of any listed corresponding author, so that the number of articles in the single categories do not necessarily add up to the total number of articles any more. Fractional counting assigns a fraction of one article count to each corresponding author, leading to possible non-integer total article counts. The second issue is not much of a problem in our setting, if both authors are situated in the same country, since we are interested in the country of affiliation associated with an article. If, however, the corresponding authors' countries of affiliation differ as in issue 3, we again have to decide upon a counting scheme: do we count each country only once per article or multiple times if multiple corresponding authors work there? The fourth issue is rather a problem of data consistency. -->
 
 ## Example 1
 
-A corresponding author lists at least two different countries, e.g.,
-`UT=000400754000138`
+Potential issues: A corresponding author lists at least two different
+countries, e.g., `UT=000400754000138`. Additionally, only one
+affiliation is tagged as `RP` in `wos_b_2019.items_author_institutions`.
 
 ``` sql
 select  distinct wos_b_2019.institutions.countrycode,
@@ -56,14 +68,13 @@ order by wos_b_2019.items_authors_institutions.fk_authors
 
 5 records
 
-Potential issues: Only one affiliation is tagged as `RP` in
-`wos_b_2019.items_author_institutions`.
-
 ## Example 2
 
-More than one corresponding author is listed. For
+Potential issues: More than one corresponding author is listed. For
 `UT_EID=000372645900002`, the Web of Science lists seven corresponding
-authors and four reprint adresses.
+authors and four reprint adresses. Furthermore, as in Example 1, only
+one affiliation is tagged as `RP` in
+`wos_b_2019.items_author_institutions`.
 
 ``` sql
 select  distinct wos_b_2019.institutions.countrycode,
@@ -101,15 +112,15 @@ order by wos_b_2019.items_authors_institutions.fk_authors
 
 14 records
 
-Potential issue: As in Example 1, Only one affiliation is tagged as `RP`
-in `wos_b_2019.items_author_institutions`.
-
 ## Example 3
 
 Corresponding authors work in different countries. For
 `UT_EID=000372645900002`, the Web of Science lists two corresponding
 authors, one affilated with a Spanish, the other with a Portuguese
-institution.
+institution. As in Examples 1 and 2, only one affiliation is tagged with
+RP in `wos_b_2019.items_author_institutions`. Moreover, checking the WoS
+raw data reveals that the RP-author `15145104` is not affiliated with an
+Portuguese institution at all.
 
 ``` sql
 select  distinct wos_b_2019.institutions.countrycode,
@@ -143,23 +154,18 @@ order by wos_b_2019.items_authors_institutions.fk_authors
 
 Displaying records 1 - 10
 
-Potential issues: As in Example 1 and 2, only one affiliation is tagged
-with RP in `wos_b_2019.items_author_institutions`. Moreover, checking
-the WoS raw data reveals that the RP-author `14734495` is not affiliated
-with an Portuguese institution at all.
-
 ## SQL strategy to circumvent these issues
 
 ### Steps
 
-1.  Get all `FK_AUTHORS` tagged as `RP`, and store the result
+1.  Get all `FK_AUTHORS` tagged as `RP`, and store the result as
     `rp_author_table`
 2.  From authors listed in `rp_author_table` obtain all countries of
-    affilation and store them in `rp_countries_table`
+    affiliation and store them in `rp_countries_table`
 3.  Aggregate
 `rp_countries_table`
 
-#### 1\. Get all `FK_AUTHORS` tagged as `RP`, and store the result `rp_author_table`
+#### 1\. Get all `FK_AUTHORS` tagged as `RP`, and store the result as `rp_author_table`
 
 ``` sql
 select

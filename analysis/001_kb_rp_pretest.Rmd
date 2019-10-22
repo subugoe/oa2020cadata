@@ -99,7 +99,7 @@ order by wos_b_2019.items_authors_institutions.fk_authors
 
 ## Example 3
 
-Corresponding authors work in different countries. For `UT_EID=000372645900002`, the Web of Science lists two corresponding authors, one affilated with a Spanish, the other with a Portuguese institution. As in Examples 1 and 2, only one affiliation is tagged with RP in `wos_b_2019.items_author_institutions`. Moreover, checking the WoS raw data reveals that the RP-author `14734495` is not affiliated with an Portuguese institution at all. <!--when I run the query it only shows 10 records, none of them has fk_author 14734495-->
+Corresponding authors work in different countries. For `UT_EID=000372645900002`, the Web of Science lists two corresponding authors, one affilated with a Spanish, the other with a Portuguese institution. As in Examples 1 and 2, only one affiliation is tagged with RP in `wos_b_2019.items_author_institutions`. Moreover, checking the WoS raw data reveals that the RP-author `15145104` is not affiliated with an Portuguese institution at all.
 
 ```{sql connection=jdbcConnection}
 select  distinct wos_b_2019.institutions.countrycode,
