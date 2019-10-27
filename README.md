@@ -26,8 +26,8 @@ Analytical steps for obtaining the data from the Web of Science in-house databas
 
 - [`001_kb_rp_pretest.Rmd`](analysis/001_kb_rp_pretest.Rmd) - Initial exploration about how corresponding authorships are represented in the WoS-KB. Link to the [rendered report](analysis/001_kb_rp_pretest.md)
 - [`002_kb_rp_coverage.Rmd`](analysis/002_kb_rp_coverage.Rmd) - Coverage analysis of reprint authors in the WoS-KB for the period 2014 - 2018. Link to the [rendered report](analysis/002_kb_rp_coverage.md)
-- [`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd) - Steps to obtain and compile the dataset about corresponding author country affiliations 2014 - 2018. Link to the [rendered report](analysis/003_kb_fetch_ca.md)
-- [`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd) - Steps to obtain and compile the dataset about the global publisher output 2014 - 2018. Link to the [rendered report](analysis/004_kb_fetch_publisher.md)
+- [`003_kb_fetch_ca.Rmd`](analysis/003_kb_fetch_ca.Rmd) - Steps to obtain and compile the dataset relative to corresponding author country affiliations 2014 - 2018. Link to the [rendered report](analysis/003_kb_fetch_ca.md)
+- [`004_kb_fetch_publisher.Rmd`](analysis/004_kb_fetch_publisher.Rmd) - Steps to obtain and compile the dataset relative to the global publisher output 2014 - 2018. Link to the [rendered report](analysis/004_kb_fetch_publisher.md)
 - [`wos_cr_match.Rmd`](analysis/wos_cr_match.Rmd) - Obtain most frequent publisher and journal name by Web of Science indexed journal from Crossref. Executing this script will take approx. 2-3 hours.
 
 ### Data files
@@ -113,9 +113,11 @@ Source Code: MIT (Najko Jahn, 2019)
 
 ### Contributors
 
+*in alphabetical order*
+
 - Design and Conceptualization: Colleen Campbell, Kai Geschuhn, Najko Jahn
 - Data Analysis: Najko Jahn
-- Writing and Review: Najko Jahn, Birgit Schmidt, Niels Taubert
+- Writing and Review:  Colleen Campbell, Anne Hobert, Najko Jahn, Birgit Schmidt, Niels Taubert, Anne Hobert
 
 ### Contributing
 
