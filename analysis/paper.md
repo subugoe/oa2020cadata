@@ -506,7 +506,7 @@ Ram, Karthik. 2019. *Holepunch: Configure Your R Project for
 <div id="ref-Sander_2019">
 
 Sander, Frank, Guido Hermann, Horst Hippler, Gerard Meijer, and Ralf
-Schimmer. 2019. “Projekt Deal – John Wiley \&Amp; Son Publish and Read
+Schimmer. 2019. “Projekt Deal – John Wiley and Son Publish and Read
 Agreement.” <https://doi.org/10.17617/2.3027595>.
 
 </div>
