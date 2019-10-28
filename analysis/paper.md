@@ -325,9 +325,9 @@ agreements as a means to increase the proportion of their research
 published open access,\[1\] the dataset constitutes a highly useful
 resource for researchers and practitioners alike. When combined with
 information on a country’s own subscription and hybrid APC expenditure,
-bibliometric data about corresponding author affiliation benefit cost
-modelling for a fully open access future national consortia can derive
-key insights such as
+bibliometric data about corresponding author affiliation can help
+national consortia cost model for a fully open access future and derive
+key insights such as:
 
   - What is the total research output of our authors?
   - How fast is our output growing?
