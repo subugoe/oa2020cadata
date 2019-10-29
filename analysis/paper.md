@@ -51,7 +51,7 @@ German Open Access Monitor provides breakdowns by publisher and journal
 and includes publications from non-university research institutions
 based in Germany (Mittermaier et al. 2018). In its [Publisher Analytics
 Reports](https://clarivate.com/webofsciencegroup/solutions/publisher-analytics-reports/)
-Clarivate Analtics presents the performance of publishers across
+Clarivate Analytics presents the performance of publishers across
 subjects, institutions and countries based on Web of Science data.
 
 Here, we build an open dataset on the global productivity of
