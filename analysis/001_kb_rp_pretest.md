@@ -1,8 +1,6 @@
 Reprint Authors per Country
 ================
 
-    #> [1] 0
-
 ## Motivation
 
 Country information about corresponding authors play a crucial role in
@@ -22,8 +20,7 @@ corresponding author addresses only.
 
 1.  A corresponding author lists at least two different countries
 2.  More than one corresponding author is listed
-3.  Corresponding authors work in different
-countries
+3.  Corresponding authors work in different countries
 
 <!--  why is issue of ex. 1 (multiple affiliations with differing author roles) not mentioned here? 
 
@@ -162,8 +159,7 @@ Displaying records 1 - 10
     `rp_author_table`
 2.  From authors listed in `rp_author_table` obtain all countries of
     affiliation and store them in `rp_countries_table`
-3.  Aggregate
-`rp_countries_table`
+3.  Aggregate `rp_countries_table`
 
 #### 1\. Get all `FK_AUTHORS` tagged as `RP`, and store the result as `rp_author_table`
 
@@ -266,7 +262,7 @@ order by issn
 
 6 records
 
-<div id="refs" class="references">
+<div id="refs" class="references hanging-indent">
 
 <div id="ref-Schimmer_2015">
 
