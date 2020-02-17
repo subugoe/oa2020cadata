@@ -1,8 +1,6 @@
 Reprint Author Analysis
 ================
 
-    #> [1] 0
-
 ## Questions
 
 1.  How many records in the Web of Science have affiliation information
@@ -24,8 +22,7 @@ Focus:
   - Database: wos\_b\_2019
   - Document Types: Articles and Reviews
   - Database Collections: `WOS.SCI`, `WOS.SSCI`, `WOS.AHCI`
-  - Publication Period 2014 -
-2018
+  - Publication Period 2014 - 2018
 
 ## Data analysis
 
@@ -61,8 +58,7 @@ articles_total %>%
 #### Records with reprint authors
 
 Using `wos_b_2019.items_authors_institutions.type = 'RP'` to identify
-reprint
-authors.
+reprint authors.
 
 ``` sql
 select wos_b_2019.items.pubyear, COUNT(DISTINCT(wos_b_2019.items.ut_eid)) as rp_articles_total
@@ -97,9 +93,9 @@ rp_articles_total %>%
 
 *Retrieval considerations*
 
-[An earlier exploration](kb_rp_exploration.md) studying how affiliations
-from reprint authors are represented in the WOS-KB revealed that only
-one affiliation is tagged with `RP in the
+[An earlier exploration](kb_rp_exploration.md)<!--link ist tot!-->
+studying how affiliations from reprint authors are represented in the
+WOS-KB revealed that only one affiliation is tagged with `RP in the
 table`wos\_b\_2019.items\_author\_institutions\` per author. To obtain
 all affiliations per reprint author, the following retrieval strategy
 can be used:
@@ -312,8 +308,7 @@ results in a thorough countries of affiliation coverage for reprint
 authors. Overall, 99 % of records representing original articles and
 reviews in the period 2014 - 2017 provide affiliation information for
 reprint authors at the country-level. In the following,
-`wos_b_2019.d_items_authors_institutions.inst_countrycode` is
-used.
+`wos_b_2019.d_items_authors_institutions.inst_countrycode` is used.
 
 ### 2\. How many records in the Web of Science have more than one reprint author?
 
@@ -433,7 +428,7 @@ tp_au_count %>%
 <img src="002_kb_rp_coverage_files/figure-gfm/ca_author_count-1.png" width="70%" style="display: block; margin: auto;" />
 
 SQL statement to retrieve all publications with more than one reprint
-author (incl. country info)
+author (incl. country info)
 
 ``` sql
 select
@@ -516,8 +511,7 @@ rp_inst_au_df %>%
 <img src="002_kb_rp_coverage_files/figure-gfm/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" />
 
 Overall, around half of the reprint authors indexed listed more than one
-institutional affiliation (N = 4,148,308, Proportion = 48
-%).
+institutional affiliation (N = 4,148,308, Proportion = 48 %).
 
 ### 4\. How many reprint authors are internationally co-located (country level)?
 
@@ -602,15 +596,13 @@ rp_country_au_df %>%
 
 Although the number of co-located reprint authors is growing, only a
 small proportion of reprint author is internationally co-located (N =
-434,331, Proportion = 5
-%).
+434,331, Proportion = 5 %).
 
 ### 5\. What is the collaboration network in terms of country affiliations from reprint authors?
 
 #### Query
 
-Obtain publications with country
-affiliations
+Obtain publications with country affiliations
 
 ``` sql
 select  distinct wos_b_2019.d_items_authors_institutions.INST_COUNTRYCODE,       
@@ -688,8 +680,7 @@ left_join(all_count, co_count, by = "INST_COUNTRYCODE") %>%
 #> # … with 239 more rows
 ```
 
-Create bi-partite
-matrix
+Create bi-partite matrix
 
 ``` r
 #co_pubs_mat <- as.matrix(table(co_pubs$UT_EID, co_pubs$INST_COUNTRYCODE))
